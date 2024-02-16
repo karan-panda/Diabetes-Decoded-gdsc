@@ -48,7 +48,7 @@ const SideNav = () => {
       </div>
       <ul>
         {navItems.map(({ href, title, icon }) => (
-          <li key={title} className={`flex space-x-2 p-4 hover:bg-rose-900 hover:text-white ${router.pathname === href ? 'font-bold' : ''}`} onClick={() => handleNavigation(href)}>
+          <li key={title} className={`flex space-x-2 p-4 ${router.pathname.includes(href) ? 'bg-rose-900 text-white font-bold' : 'hover:bg-rose-900 hover:text-white'} `} onClick={() => handleNavigation(href)}>
             <div className="flex items-center space-x-2">
               {icon}
             </div>
@@ -58,7 +58,7 @@ const SideNav = () => {
       </ul>
       {/* Logout and Settings */}
       <ul className="absolute bottom-0 left-0 right-0">
-        <li className="p-4 hover:bg-rose-900 hover:text-white" onClick={handleSettings}>
+        <li className={`p-4 ${router.pathname.includes('settings') ? 'bg-rose-900 text-white font-bold' : 'hover:bg-rose-900 hover:text-white'}`} onClick={handleSettings}>
           <div className="flex items-center space-x-2">
             <FiSettings className="text-2xl" />
             <Link href="/settings"><span className={`${collapsed ? 'hidden' : 'block'}`}>Settings</span></Link>

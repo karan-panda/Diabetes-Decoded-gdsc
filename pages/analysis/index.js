@@ -1,15 +1,12 @@
 import Sidenav from '../../components/sidenav';
+import Graph from '../../components/graph'; 
 
 export default function Layout() {
   return (
     <div className="flex bg-white">
       <Sidenav />
-      <div className=''>
-        {/* Dashboard content */}
-        <h1 className='text-2xl font-bold mb-4'>Analysis</h1>
-        <div className="flex justify-center items-center">
-          <p className="text-center">Welcome to the Analysis Page!</p>
-        </div>
+      <div className='flex justify-center items-center flex-grow'>
+        <Graph /> 
       </div>
     </div>
   );
