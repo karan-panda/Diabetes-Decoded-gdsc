@@ -12,7 +12,7 @@ const SideNav = () => {
 
   const navItems = [
     {
-      href: '/dashboard',
+      href: '/home',
       title: 'Home',
       icon: <IoMdHome className="text-2xl" />,
     },
