@@ -1,15 +1,14 @@
+import React from 'react';
 import Sidenav from '../../components/sidenav';
+import ProfileSettings from '../../components/ProfileSettings'; // corrected import path
 
 export default function Layout() {
   return (
     <div className="flex bg-white">
       <Sidenav />
-      <div className=''>
-        {/* Dashboard content */}
-        <h1 className='text-2xl font-bold mb-4'>Settings</h1>
-        <div className="flex justify-center items-center">
-          <p className="text-center">Welcome to the Settings!</p>
-        </div>
+      <div className='flex flex-col w-full'>
+        
+        <ProfileSettings/> {/* Rendering ProfileSettings component */}
       </div>
     </div>
   );
