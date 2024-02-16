@@ -1,8 +1,44 @@
+import React, { useState } from 'react';
 import Sidenav from '../../components/sidenav';
 import Calendar from '../../components/Calendar';
 import { IoRadioButtonOn } from "react-icons/io5";
 
 export default function Layout() {
+  function TaskList() {
+    const [tasks, setTasks] = useState([
+      { id: 1, name: 'Daily test', checked: false },
+      { id: 2, name: 'Follow diet', checked: false },
+      { id: 3, name: 'Follow exercise', checked: false }
+    ]);
+
+    const toggleCheckbox = (taskId) => {
+      setTasks(tasks.map(task =>
+        task.id === taskId ? { ...task, checked: !task.checked } : task
+      ));
+    };
+
+    return (
+      <div className="bg-gray-200 rounded-lg p-4 flex-grow">
+        <h2 className="text-lg font-semibold mb-4">Tasks</h2>
+        <div className="space-y-4">
+          {tasks.map(task => (
+            <div className="flex items-center justify-between" key={task.id}>
+              <div className="flex items-center">
+                <IoRadioButtonOn className="mr-2" />
+                <span>{task.name}</span>
+              </div>
+              <input
+                type="checkbox"
+                checked={task.checked}
+                onChange={() => toggleCheckbox(task.id)}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-white">
       <Sidenav />
@@ -15,31 +51,12 @@ export default function Layout() {
             <Calendar />
           </div>
 
-          <div className="bg-gray-200 rounded-md p-4 flex-grow">
-            <h2 className="text-lg font-semibold mb-4">Tasks</h2>
-            <div className="space-y-4">
-              <div className="flex items-center">
-                <IoRadioButtonOn className="mr-2" />
-                <span>Daily test</span>
-              </div>
+          <TaskList /> {/* Embedding TaskList component here */}
 
-              <hr className="my-2" />
-              <div className="flex items-center">
-                <IoRadioButtonOn className="mr-2" />
-                <span>Follow diet</span>
-              </div>
-              <hr className="my-2" />
-              <div className="flex items-center">
-                <IoRadioButtonOn className="mr-2" />
-                <span>Follow exercise</span>
-              </div>
-              <hr className="my-2" />
-            </div>
-          </div>
         </div>
 
-        <div className="flex mt-8">
-          <div className="bg-gray-200 rounded-md p-4 flex-grow">
+        <div className="flex mt-8 space-x-8">
+          <div className="bg-gray-200 rounded-lg p-4 flex-grow space-y-4">
             <h2 className="text-lg font-semibold mb-4">News on Diabetes</h2>
             <div className='bg-white rounded-md'>
               News_1
@@ -50,9 +67,9 @@ export default function Layout() {
           </div>
 
           <div className="bg-gray-200 rounded-md p-4 ml-8 flex space-x-6">
-            <div className='bg-pink-200'>Healty diet plan</div>
-            <div className='bg-green-200'>Exercise Plan</div>
-            <div className='bg-blue-200'>Test diabetes</div>
+            <div className='bg-pink-200 p-2'>Healty diet plan</div>
+            <div className='bg-green-200 p-2'>Exercise Plan</div>
+            <div className='bg-blue-200 p-2'>Test diabetes</div>
           </div>
         </div>
       </div>

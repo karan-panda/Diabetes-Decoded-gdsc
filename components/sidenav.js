@@ -60,7 +60,7 @@ const SideNav = () => {
         <li className="p-4 hover:bg-rose-900 hover:text-white" onClick={handleSettings}>
           <div className="flex items-center space-x-2">
             <FiSettings className="text-2xl" /> {/* Increase icon size */}
-            <span>Settings</span>
+            <Link href="/settings">Settings</Link>
           </div>
         </li>
         <li className="p-4 hover:bg-rose-900 hover:text-white" onClick={handleLogout}>
