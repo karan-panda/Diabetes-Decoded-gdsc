@@ -18,7 +18,7 @@ export default function Layout() {
     };
 
     return (
-      <div className="bg-gray-200 rounded-lg p-4 flex-grow">
+      <div className="bg-gray-200 rounded-lg p-4 flex-grow text-black">
         <h2 className="text-lg font-semibold mb-4">Tasks</h2>
         <div className="space-y-4">
           {tasks.map(task => (
@@ -40,7 +40,7 @@ export default function Layout() {
   }
 
   return (
-    <div className="flex h-screen bg-white">
+    <div className="flex h-screen bg-white text-black">
       <Sidenav />
       <div className="flex flex-col p-8 w-full">
         <h1 className="text-2xl font-bold mb-4">Hello User</h1>
