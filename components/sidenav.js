@@ -1,29 +1,30 @@
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { IoMdHome } from "react-icons/io";
+import { IoMdHome, IoIosMenu } from "react-icons/io";
 import { FaChartLine } from "react-icons/fa";
 import { MdOutlineBloodtype } from "react-icons/md";
 import { FiLogOut, FiSettings } from "react-icons/fi";
 
-
 const SideNav = () => {
   const router = useRouter();
+  const [collapsed, setCollapsed] = useState(false);
 
   const navItems = [
     {
       href: '/dashboard',
-      title: 'Dashboard',
-      icon: <IoMdHome className="text-2xl" />, // Increase icon size
+      title: 'Home',
+      icon: <IoMdHome className="text-2xl" />,
     },
     {
       href: 'analysis',
       title: 'Analysis',
-      icon: <FaChartLine className="text-2xl" />, // Increase icon size
+      icon: <FaChartLine className="text-2xl" />,
     },
     {
       href: 'testing',
       title: 'Testing',
-      icon: <MdOutlineBloodtype className="text-2xl" />, // Increase icon size
+      icon: <MdOutlineBloodtype className="text-2xl" />,
     },
   ];
 
@@ -32,26 +33,26 @@ const SideNav = () => {
   };
 
   const handleLogout = () => {
-    // Handle logout logic here
     console.log('Logging out...');
   };
 
   const handleSettings = () => {
-    // Handle settings logic here
     console.log('Going to settings...');
   };
 
   return (
-    <nav className="bg-gray-200 text-black w-64 h-screen relative items-center">
-      <div className="flex justify-center items-center h-20">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
+    <nav className={`bg-gray-200 text-black transition-all duration-500 ease-in-out ${collapsed ? 'w-20' : 'w-64'} h-screen relative items-center`}>
+      <div className="flex justify-between items-center h-20 px-4">
+        <h1 className={`${collapsed ? 'hidden' : 'block'} text-2xl font-bold`}>Dashboard</h1>
+        <IoIosMenu className="text-2xl cursor-pointer" onClick={() => setCollapsed(!collapsed)} />
       </div>
       <ul>
         {navItems.map(({ href, title, icon }) => (
-          <li key={title} className={`p-4 hover:bg-rose-900 hover:text-white ${router.pathname === href ? 'font-bold' : ''}`} onClick={() => handleNavigation(href)}>
+          <li key={title} className={`flex space-x-2 p-4 hover:bg-rose-900 hover:text-white ${router.pathname === href ? 'font-bold' : ''}`} onClick={() => handleNavigation(href)}>
             <div className="flex items-center space-x-2">
               {icon}
             </div>
+            <div className={`${collapsed ? 'hidden' : 'block'}`}>{title}</div>
           </li>
         ))}
       </ul>
@@ -59,14 +60,14 @@ const SideNav = () => {
       <ul className="absolute bottom-0 left-0 right-0">
         <li className="p-4 hover:bg-rose-900 hover:text-white" onClick={handleSettings}>
           <div className="flex items-center space-x-2">
-            <FiSettings className="text-2xl" /> {/* Increase icon size */}
-            <Link href="/settings">Settings</Link>
+            <FiSettings className="text-2xl" />
+            <Link href="/settings"><span className={`${collapsed ? 'hidden' : 'block'}`}>Settings</span></Link>
           </div>
         </li>
         <li className="p-4 hover:bg-rose-900 hover:text-white" onClick={handleLogout}>
           <div className="flex items-center space-x-2">
-            <FiLogOut className="text-2xl" /> {/* Increase icon size */}
-            <span>Logout</span>
+            <FiLogOut className="text-2xl" />
+            <span className={`${collapsed ? 'hidden' : 'block'}`}>Logout</span>
           </div>
         </li>
       </ul>
