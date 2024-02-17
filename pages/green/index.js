@@ -10,19 +10,20 @@ export default function Green() {
         
         <div className="flex justify-center items-center h-full">
           <div className="flex-1 flex justify-center">
-            <img src="/images/check.png" alt="" className="w-96 h-auto" />
+            <img src="/images/girl.png" alt="" className="w-96 h-auto" />
           </div>
 
           <div className="flex-1 text-center space-y-4 mr-20">
           <div className="inline-flex items-center">
-  <h1 className="text-6xl text-red-600 font-bold">You are 65% DIABETIC</h1>
+  <h1 className="text-6xl text-green-600 font-bold">You are Not DIABETIC</h1>
   {/* Adjusted alignment of sui.png image with text */}
   <img src="/images/sui.png" alt="" className="w-14 h-12 ml-4 align-middle" />
 </div>
 
             <p className="text-2xl">
-              You still have a 35% chance of not being diabetic. While there is a significant concern, rest assured that we are here to support you and guide you through any potential health challenges. Together, we can navigate the path towards a healthier future.
-            </p>
+            Great news! You have an 85% chance of not being diabetic. Rest assured, we are here to support you in maintaining your health and well-being. Even with a lower risk, our platform is dedicated to guiding you toward a healthier future. Let's work together for your continued well-being.
+
+</p>
             <div className="inline-block">
               <h2 className="text-3xl font-semibold inline">Your Path to Healthier Tomorrow Begins Here</h2>
               {/* down.png image right after h2 */}

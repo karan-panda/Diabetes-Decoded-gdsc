@@ -12,22 +12,22 @@ function Example() {
                 labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
                 datasets: [{
                     data: [86, 114, 106, 106, 107, 111, 133],
-                    label: "Applied",
+                    label: "Glucose",
                     borderColor: "rgb(62,149,205)",
                     backgroundColor: "rgb(62,149,205,0.1)",
                 }, {
                     data: [70, 90, 44, 60, 83, 90, 100],
-                    label: "Accepted",
+                    label: "Blood Pressure",
                     borderColor: "rgb(60,186,159)",
                     backgroundColor: "rgb(60,186,159,0.1)",
                 }, {
                     data: [10, 21, 60, 44, 17, 21, 17],
-                    label: "Pending",
+                    label: "BMI",
                     borderColor: "rgb(255,165,0)",
                     backgroundColor: "rgb(255,165,0,0.1)",
                 }, {
                     data: [6, 3, 2, 2, 7, 0, 16],
-                    label: "Rejected",
+                    label: "Insulin",
                     borderColor: "rgb(196,88,80)",
                     backgroundColor: "rgb(196,88,80,0.1)",
                 }]
