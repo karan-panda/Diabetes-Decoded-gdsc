@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Sidenav from '../../components/sidenav';
 import Calendar from '../../components/Calendar';
 import NewsComponent from '../../components/NewsComponent';
+import Link from "next/link";
 import { IoCheckmarkDoneCircle } from 'react-icons/io5';
 import { FaAppleAlt, FaRunning, FaVial } from 'react-icons/fa';
 
@@ -70,12 +71,16 @@ export default function Layout() {
               Healthy diet plan
             </div>
             <div className='bg-green-200 p-2 w-full flex items-center font-semibold'>
+            <Link href="/exercise-plan">
               <FaRunning className='mr-2' />
               Exercise Plan
+            </Link>
             </div>
             <div className='bg-blue-200 p-2 w-full flex items-center font-semibold'>
+            <Link href="/testing">
               <FaVial className='mr-2' />
               Test diabetes
+            </Link>
             </div>
           </div>
         </div>
