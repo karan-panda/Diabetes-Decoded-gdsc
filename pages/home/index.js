@@ -67,8 +67,10 @@ export default function Layout() {
 
           <div className="bg-gray-200 rounded-md p-4 ml-8 space-y-6 w-1/3 flex flex-col items-center justify-center">
             <div className='bg-pink-200 p-2 w-full flex items-center font-semibold'>
+            <Link href="/diet-plan">
               <FaAppleAlt className='mr-2' />
               Healthy diet plan
+              </Link>
             </div>
             <div className='bg-green-200 p-2 w-full flex items-center font-semibold'>
             <Link href="/exercise-plan">
