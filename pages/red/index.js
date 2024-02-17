@@ -21,7 +21,7 @@ export default function Green() {
 </div>
 
             <p className="text-2xl">
-              You still have a 35% chance of not being diabetic. While there is a significant concern, rest assured that we are here to support you and guide you through any potential health challenges. Together, we can navigate the path towards a healthier future.
+               While there is a significant concern, rest assured that we are here to support you and guide you through any potential health challenges. Together, we can navigate the path towards a healthier future.
             </p>
             <div className="inline-block">
               <h2 className="text-3xl font-semibold inline">Your Path to Healthier Tomorrow Begins Here</h2>
