@@ -47,7 +47,7 @@ export default function Layout() {
       <Sidenav />
       <div className="flex flex-col p-8 w-full">
         <h1 className="text-2xl font-bold mb-4">Hello User</h1>
-        <p className="">Welcome to Diabetes Track</p>
+        <p className="">Welcome to Diabetes Decoded</p>
 
         <div className="flex space-x-8 mt-8">
           <div className="calendar-wrapper">
