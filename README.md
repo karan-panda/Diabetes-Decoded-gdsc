@@ -1,5 +1,4 @@
-
-# Diabetes Decoded🩸💉: 
+# <img src="https://github.com/expenile/Counter-app/assets/129822353/b81df972-1c08-4442-ba97-828b14b0a365" alt="Logo" width="25" height="25" style="border-radius: 30%" /> Diabetes Decoded🩸💉: 
 
 An all-in-one Diabetes management and monitoring solution with a precise machine learning model. The user-friendly website offers daily tasks, latest blogs, an AI chatbot and health plan suggestions
 
@@ -30,9 +29,6 @@ How the chatbot can be enhanced using generative AI:
 
 Diabetes Decoded  prototype link : [Live demo](https://www.figma.com/proto/avwOgHzM2Q3ICtTHJYOBuE/Diabetes-Decoded?node-id=47-80&starting-point-node-id=15%3A125&scaling=contain)
 
-
-## Logo
-![logo](https://github.com/expenile/Counter-app/assets/129822353/b81df972-1c08-4442-ba97-828b14b0a365)
 ## Installation and Setup
 
 To set up and run Diabetes Decoded on your local machine, follow these steps:
