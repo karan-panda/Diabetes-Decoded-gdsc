@@ -16,13 +16,13 @@ How the chatbot can be enhanced using generative AI:
 - Language and dialect adaptation for global accessibility.
 
 
-
-
-
-
 ## Working Flow📊
 
 ![workflow](https://github.com/expenile/Counter-app/assets/129822353/3a99f4ff-b763-40ec-8103-430e96898f8b)
+
+
+## Tech Stack:
+![Diabetes_decoded_tech_stack-removebg-preview](https://github.com/karan-panda/Diabetes-Decoded-gdsc/assets/108183567/b731aefe-394d-4097-9064-a7eddc82217c)
 
 
 ## Prototype(High Fidelity)
