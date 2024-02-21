@@ -25,37 +25,6 @@ How the chatbot can be enhanced using generative AI:
 
 ![workflow](https://github.com/expenile/Counter-app/assets/129822353/3a99f4ff-b763-40ec-8103-430e96898f8b)
 
-## Screenshots
-
-Landing Page![landing](https://github.com/expenile/Counter-app/assets/129822353/61a53499-d363-4e91-90da-249e98b664ef)
-
-Account Creation![createacc](https://github.com/expenile/Counter-app/assets/129822353/22fa1aab-4445-4e84-a259-98fe0eaf6ec1)
-
-Login![login](https://github.com/expenile/Counter-app/assets/129822353/8e681182-1a9b-47ea-87c8-b60da8b69a69)
-
-Login![login](https://github.com/expenile/Counter-app/assets/129822353/8e681182-1a9b-47ea-87c8-b60da8b69a69)
-
-Data Entry Section![dataenter](https://github.com/expenile/Counter-app/assets/129822353/6b481f1b-cd3a-4508-b2c1-431b0bacd112)
-
-Result(Diabetic⚠️)![red](https://github.com/expenile/Counter-app/assets/129822353/e9492f44-628d-46ea-8493-838f36f27b78)
-
-Result(Safe👍)![green](https://github.com/expenile/Counter-app/assets/129822353/8a32ad9c-0446-4b6c-a5fe-89fc5a5ea405)
-
-Personalized Plan![diet plan](https://github.com/expenile/Counter-app/assets/129822353/f65f5328-8059-4e32-95a7-41f7c3ebc6b6)
-
-Assistance![chatbot (2)](https://github.com/expenile/Counter-app/assets/129822353/1dc11e59-b574-4b67-b185-a4eb4a0a3d32)
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## Prototype(High Fidelity)
 
