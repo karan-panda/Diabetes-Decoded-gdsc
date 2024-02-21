@@ -3,7 +3,7 @@
 </div>
 
 <h1 align="center">
-    <img src="https://readme-typing-svg.herokuapp.com/?font=Righteous&size=35&color=F7A810&center=true&vCenter=true&width=500&height=70&duration=4000&lines=Diabetes+Decoded🧬💉;" />
+    <img src="https://readme-typing-svg.herokuapp.com/?font=Righteous&size=35&color=F7A810&center=true&vCenter=true&width=500&height=70&duration=4000&lines=🕵️‍♂️Diabetes+Decoded🧬💉;" />
 </h1>
 
 <div align="center">
