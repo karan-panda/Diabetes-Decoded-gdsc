@@ -29,13 +29,13 @@ Welcome to **Diabetes Decoded**, your all-in-one solution for diabetes managemen
 </details>
 
 <details>
-  <summary>Working Flow📊</summary>
+  <summary>Work Flow🔄</summary>
   
   ![Workflow](https://github.com/expenile/Counter-app/assets/129822353/3a99f4ff-b763-40ec-8103-430e96898f8b)
 </details>
 
 <details>
-  <summary>Tech Stack</summary>
+  <summary>Tech Stack💻</summary>
   
   Check out the technologies we used in Diabetes Decoded:
   
@@ -66,13 +66,13 @@ Welcome to **Diabetes Decoded**, your all-in-one solution for diabetes managemen
 </details>
 
 <details>
-  <summary>Prototype (High Fidelity)</summary>
+  <summary>Prototype (High Fidelity)🛠️</summary>
   
   Check out our high-fidelity prototype [here](https://www.figma.com/proto/avwOgHzM2Q3ICtTHJYOBuE/Diabetes-Decoded?node-id=47-80&starting-point-node-id=15%3A125&scaling=contain).
 </details>
 
 <details>
-  <summary>Installation and Setup</summary>
+  <summary>Installation and Setup⚙️</summary>
   
   To set up and run Diabetes Decoded on your local machine, follow these steps:
   
@@ -104,7 +104,7 @@ Welcome to **Diabetes Decoded**, your all-in-one solution for diabetes managemen
 </details>
 
 <details>
-  <summary>Our Team</summary>
+  <summary>Our Team💪</summary>
   
   - [Karan Panda](https://github.com/karan-panda/)
   - [Nilesh Pal](https://github.com/expenile/)
