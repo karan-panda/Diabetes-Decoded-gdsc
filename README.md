@@ -59,10 +59,6 @@ The application should now be running on localhost with the frontend and backend
     
 ## Our Team
 
-
-- [Nishant Pandey](https://github.com/karan-panda/)
-- [Karan Panda](https://github.com/expenile/)
-- [Nilesh Pal](https://github.com/Nishant-Pandey-2004/)
-
-
-
+- [Karan Panda](https://github.com/karan-panda/)
+- [Nilesh Pal](https://github.com/expenile/)
+- [Nishant Pandey](https://github.com/Nishant-Pandey-2004/)
