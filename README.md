@@ -10,6 +10,7 @@ An all-in-one Diabetes management and monitoring solution with a precise machine
 - Comprehensive Diabetes Checking: Users can fill in their demographic data along with advanced parameters (if available) to receive a personalized diabetes risk percentage based on our sophisticated machine learning algorithms.
 - Personalized Healthcare Plans: Depending on the assessed diabetes risk percentage, users are provided with customized healthcare and exercise plans, along with the latest news on diabetes management and research.
 - AI-Powered Chatbot: Integrating a chatbot with generative AI capabilities into the "Diabetes Decoded" web application can significantly enhance user interaction and provide personalized support. 
+
 How the chatbot can be enhanced using generative AI:
 - Advanced NLU for precise query interpretation.
 - Personalized responses based on user data.
