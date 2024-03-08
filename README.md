@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/expenile/Counter-app/assets/129822353/b81df972-1c08-4442-ba97-828b14b0a365" alt="Logo" width="200" height="200" style="border-radius: 30%" />
+  <img src="https://github.com/karan-panda/Diabetes-Decoded-gdsc/assets/108183567/5b722ad7-e8b9-4828-a2f6-897a2b9685b2" alt="Logo" width="200" height="200" style="border-radius: 30%" />
 </div>
 
 <h1 align="center">
