@@ -1,13 +1,18 @@
+import React from 'react';
 import Sidenav from '../../components/sidenav';
-import Graph from '../../components/graph'; 
+import Graph from '../../components/graph';
+import AlanAssistant from '../../components/Chatbot'; // Import the AlanAssistant component
 
-export default function Layout() {
+const Layout = () => {
   return (
     <div className="flex bg-white">
+      <AlanAssistant /> {/* Render the AlanAssistant component */}
       <Sidenav />
-      <div className='flex justify-center items-center flex-grow'>
+      <div className=''>
         <Graph /> 
       </div>
     </div>
   );
-}
+};
+
+export default Layout;

@@ -89,6 +89,14 @@ How the chatbot can be enhanced using generative AI:
 </details>
 
 <details>
+  <summary>Chatbot🤖</summary>
+  
+  We've developed a chatbot using the Hugging Face Llama2 model and trained it using data from the American Diabetes Association PDF. In the future, we aim to integrate Gemini or Gemma to enhance its capabilities.
+
+  Check out our project repository on GitHub: [Diabetes Chatbot Repo](https://github.com/karan-panda/diabetes-chatbot)
+</details>
+
+<details>
   <summary>Installation and Setup⚙️</summary>
   
   To set up and run Diabetes Decoded on your local machine, follow these steps:
