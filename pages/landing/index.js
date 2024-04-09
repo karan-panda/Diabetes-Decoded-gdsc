@@ -5,7 +5,17 @@ import { FaCheck } from "react-icons/fa"; // Importing tick mark icon
 export default function Second() {
   return (
     <>
-      <div className="w-full h-screen bg-white text-black flex flex-col justify-between">
+      <div
+        className="w-full h-screen bg-white text-black flex flex-col justify-between"
+        style={{
+          backgroundImage: "url('../images/scenery.jpg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundColor: 'rgba(255, 255, 255, 0.5)', // Controls the transparency. Adjust the alpha value as needed.
+          backgroundBlendMode: 'overlay',
+        }}
+      >
         <img src="/images/right-top.png" alt="" className="absolute right-0 top-0 m-4 w-24 h-24" />
         <img src="/images/left-bottom.png" alt="" className="absolute left-0 bottom-0 m-4 w-24 h-24" />
 
@@ -29,10 +39,10 @@ export default function Second() {
             </div>
             <div className="space-x-4">
               <Link href="/register" passHref>
-                <button className="bg-blue-500 text-white px-6 py-2 rounded-3xl text-lg">Sign Up</button>
+                <button className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-2 rounded-3xl text-xl">Sign Up</button>
               </Link>
               <Link href="/login" passHref>
-                <button className="bg-gray-300 px-6 py-2 rounded-3xl text-lg">Login</button>
+              <button className="bg-gray-200 hover:bg-gray-300 px-6 py-2 rounded-3xl text-xl">Login</button>
               </Link>
             </div>
           </div>
