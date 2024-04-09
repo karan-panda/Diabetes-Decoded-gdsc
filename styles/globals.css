@@ -2,3 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Initial state of the tooltip text is hidden */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s ease-in-out;
+}
+
+/* Change to visible when hovering over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+
+
