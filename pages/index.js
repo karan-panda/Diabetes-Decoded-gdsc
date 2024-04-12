@@ -62,7 +62,7 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-            <div className="lg:w-2/5 flex justify-center lg:justify-end m-8 lg:mt-0 ">
+            <div className="lg:w-2/5 flex justify-center lg:justify-end m-8 lg:mt-10 ">
               <img className="max-w-xs lg:max-w-sm xl:max-w-lg" src="../images/care.png" alt="Doctor consulting with patient" />
             </div>
           </div>

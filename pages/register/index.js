@@ -58,15 +58,15 @@ export default function Register() {
   return (
     <div className="flex items-center justify-center h-screen bg-white px-4" >
       <div className="shadow-lg border border-gray-200 rounded-lg p-6 max-w-4xl mx-auto">
-        <div className="flex gap-10 justify-center items-center">
-          <div className="w-1/3 flex justify-center items-center relative">
+        <div className="flex flex-col sm:flex-row gap-10 justify-center items-center">
+          <div className="w-full mt-10 sm:w-1/3 flex justify-center items-center relative">
             <img
-              className="max-w-full max-h-[60vh] object-contain"
+              className="max-w-full  max-h-[50vh] sm:max-h-[60vh]  object-contain"
               src="./images/doctor.png"
               alt="Doctor illustration"
             />
           </div>
-          <div className="w-1/3 max-w-md">
+          <div className="w-full sm:w-1/3 max-w-md">
             <h2 className="text-2xl font-bold text-black text-center mb-6">
               Create Account
             </h2>
