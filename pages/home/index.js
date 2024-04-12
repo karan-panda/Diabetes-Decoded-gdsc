@@ -1,25 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidenav from '../../components/sidenav';
 import Calendar from '../../components/Calendar';
 import NewsComponent from '../../components/NewsComponent';
 import Link from "next/link";
-import { IoCheckmarkDoneCircle } from 'react-icons/io5';
+import { IoCheckmarkDoneCircle, IoCheckmarkDoneSharp } from 'react-icons/io5';
 import { FaAppleAlt, FaRunning, FaVial } from 'react-icons/fa';
 
 export default function Layout() {
+  const [tasks, setTasks] = useState([
+    { id: 1, name: 'Daily test', checked: false },
+    { id: 2, name: 'Follow diet', checked: false },
+    { id: 3, name: 'Follow exercise', checked: false }
+  ]);
+
+  const [allTasksCompleted, setAllTasksCompleted] = useState(false);
+  useEffect(() => {
+    setAllTasksCompleted(tasks.every(task => task.checked));
+  }, [tasks]);
+
+  const toggleCheckbox = (taskId) => {
+    setTasks(tasks.map(task =>
+      task.id === taskId ? { ...task, checked: !task.checked } : task
+    ));
+  };
+
   function TaskList() {
-    const [tasks, setTasks] = useState([
-      { id: 1, name: 'Daily test', checked: false },
-      { id: 2, name: 'Follow diet', checked: false },
-      { id: 3, name: 'Follow exercise', checked: false }
-    ]);
-
-    const toggleCheckbox = (taskId) => {
-      setTasks(tasks.map(task =>
-        task.id === taskId ? { ...task, checked: !task.checked } : task
-      ));
-    };
-
     return (
       <div className="bg-gray-200 rounded-lg p-4 flex-grow text-black">
         <h2 className="text-lg font-semibold mb-4">Tasks</h2>
@@ -51,7 +56,7 @@ export default function Layout() {
 
         <div className="flex space-x-8 mt-8">
           <div className="calendar-wrapper">
-            <Calendar />
+            <Calendar allTasksCompleted={allTasksCompleted} />
           </div>
 
           <TaskList />
@@ -67,22 +72,22 @@ export default function Layout() {
 
           <div className="bg-gray-200 rounded-md p-4 ml-8 space-y-6 w-1/3 flex flex-col items-center justify-center">
             <div className='bg-pink-200 p-2 w-full flex items-center font-semibold'>
-            <Link href="/diet-plan">
-              <FaAppleAlt className='mr-2' />
-              Healthy diet plan
+              <Link href="/diet-plan">
+                <FaAppleAlt className='mr-2' />
+                Healthy diet plan
               </Link>
             </div>
             <div className='bg-green-200 p-2 w-full flex items-center font-semibold'>
-            <Link href="/exercise-plan">
-              <FaRunning className='mr-2' />
-              Exercise Plan
-            </Link>
+              <Link href="/exercise-plan">
+                <FaRunning className='mr-2' />
+                Exercise Plan
+              </Link>
             </div>
             <div className='bg-blue-200 p-2 w-full flex items-center font-semibold'>
-            <Link href="/testing">
-              <FaVial className='mr-2' />
-              Test diabetes
-            </Link>
+              <Link href="/testing">
+                <FaVial className='mr-2' />
+                Test diabetes
+              </Link>
             </div>
           </div>
         </div>
