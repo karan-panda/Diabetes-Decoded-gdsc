@@ -25,20 +25,12 @@ const MyCalendar = ({ allTasksCompleted }) => {
 
   return (
     <div>
-  <style>
-    {`
-      .react-calendar__tile--active {
-        background: #10B981 !important; /* This is the color for 'text-green-500' in Tailwind CSS */
-        color: white !important;
-      }
-    `}
-  </style>
-  <Calendar
-    onChange={onChange}
-    value={date}
-    tileContent={tileContent}
-  />
-</div>
+      <Calendar
+        onChange={onChange}
+        value={date}
+        tileContent={tileContent}
+      />
+    </div>
   );
 };
 
