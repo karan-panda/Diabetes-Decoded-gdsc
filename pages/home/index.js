@@ -54,7 +54,7 @@ export default function Layout() {
         <h1 className="text-2xl font-bold mb-4">Hello User</h1>
         <p className="">Welcome to Diabetes Decoded</p>
 
-        <div className="flex space-x-8 mt-8">
+        <div className="flex flex-col sm:flex-row space-y-8 sm:space-y-0 sm:space-x-8 mt-8">
           <div className="calendar-wrapper">
             <Calendar allTasksCompleted={allTasksCompleted} />
           </div>
@@ -63,14 +63,14 @@ export default function Layout() {
 
         </div>
 
-        <div className="flex mt-8 space-x-8">
-          <div className="bg-gray-200 rounded-lg p-4 flex-grow space-y-4 w-2/3">
+        <div className="flex flex-col lg:flex-row mt-8 space-y-8 lg:space-y-0 lg:space-x-8">
+          <div className="bg-gray-200 rounded-lg p-4 flex-grow space-y-4 w-full lg:w-2/3">
             <div className='bg-white rounded-md'>
               <NewsComponent />
             </div>
           </div>
 
-          <div className="bg-gray-200 rounded-md p-4 ml-8 space-y-6 w-1/3 flex flex-col items-center justify-center">
+          <div className="bg-gray-200 rounded-md p-4  space-y-6 w-full lg:w-1/3 flex flex-col items-center justify-center">
             <div className='bg-pink-200 p-2 w-full flex items-center font-semibold'>
               <Link href="/diet-plan">
                 <FaAppleAlt className='mr-2' />

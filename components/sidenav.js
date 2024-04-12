@@ -1,14 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { IoMdHome, IoIosMenu } from "react-icons/io";
 import { FaChartLine } from "react-icons/fa";
 import { MdOutlineBloodtype } from "react-icons/md";
 import { FiLogOut, FiSettings } from "react-icons/fi";
+import { useMediaQuery } from 'react-responsive';
 
 const SideNav = () => {
   const router = useRouter();
-  const [collapsed, setCollapsed] = useState(false);
+  const isSmallScreen = useMediaQuery({ query: '(max-width: 768px)' });
+  const [collapsed, setCollapsed] = useState(isSmallScreen);
+  useEffect(() => {
+    setCollapsed(isSmallScreen);
+  }, [isSmallScreen]);
 
   const navItems = [
     {
