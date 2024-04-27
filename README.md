@@ -9,22 +9,7 @@
 <div align="center">
 
 Welcome to **Diabetes Decoded**, your all-in-one solution for diabetes management and monitoring. Our platform integrates precise machine learning models, user-friendly web applications, personalized healthcare plans, and an AI-powered chatbot to provide comprehensive support for diabetes management.
-
-<<<<<<< HEAD
-- Diverse Machine Learning Models: Implementation of various machine learning models including Linear Regression, Logistic Regression, and KNN. Through extensive testing, Neural Networks have been identified to provide the highest accuracy and have been integrated into our core algorithm.
-- User-Friendly Web Application: A seamless web interface named "Diabetes Decoded," where users can sign up, log in, and input their data for diabetes risk assessment.
-- Comprehensive Diabetes Checking: Users can fill in their demographic data along with advanced parameters (if available) to receive a personalized diabetes risk percentage based on our sophisticated machine learning algorithms.
-- Personalized Healthcare Plans: Depending on the assessed diabetes risk percentage, users are provided with customized healthcare and exercise plans, along with the latest news on diabetes management and research.
-- AI-Powered Chatbot: Integrating a chatbot with generative AI capabilities into the "Diabetes Decoded" web application can significantly enhance user interaction and provide personalized support. 
-
-How the chatbot can be enhanced using generative AI:
-- Advanced NLU for precise query interpretation.
-- Personalized responses based on user data.
-- Customized educational content on diabetes management.
-- Language and dialect adaptation for global accessibility.
-=======
 </div>
->>>>>>> 8a511e2b1569290b5b8d86851799b7f11995bfa7
 
 ## Table of Contents
 
