@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FaCheck } from "react-icons/fa"; // Importing tick mark icon
+import { FaCheck } from "react-icons/fa"; 
 
 export default function Second() {
   return (

@@ -6,9 +6,9 @@ import AlanAssistant from '../../components/Chatbot'; // Import the AlanAssistan
 const Layout = () => {
   return (
     <div className="flex bg-white">
-      <AlanAssistant /> {/* Render the AlanAssistant component */}
+      <AlanAssistant /> 
       <Sidenav />
-      <div className=''>
+      <div className='p-4 '>
         <Graph /> 
       </div>
     </div>

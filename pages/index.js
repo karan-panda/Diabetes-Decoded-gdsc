@@ -1,12 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import Head from "next/head"; // Import Head for adding global styles
+import Head from "next/head"; 
 
 export default function Home() {
   return (
     <>
       <Head>
-        {/* Global style to prevent scrolling and ensure the page fits the viewport */}
         <style global jsx>{`
           body, html {
             margin: 0;
