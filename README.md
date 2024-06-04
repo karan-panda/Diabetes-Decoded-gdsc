@@ -11,6 +11,11 @@
 Welcome to **Diabetes Decoded**, your all-in-one solution for diabetes management and monitoring. Our platform integrates precise machine learning models, user-friendly web applications, personalized healthcare plans, and an AI-powered chatbot to provide comprehensive support for diabetes management.
 </div>
 
+https://github.com/karan-panda/Diabetes-Decoded-gdsc/assets/108183567/cb0ebc90-e253-4f60-a29a-70c59cb3bec6
+
+https://github.com/karan-panda/Diabetes-Decoded-gdsc/assets/108183567/3b01d0e5-21f2-4943-8d41-d55ccde0d5e7
+
+
 ## Table of Contents
 
 <details>
