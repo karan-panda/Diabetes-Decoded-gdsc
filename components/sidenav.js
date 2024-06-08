@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { IoMdHome, IoIosMenu } from "react-icons/io";
-import { FaChartLine } from "react-icons/fa";
+import { IoMdHome, IoIosMenu, IoMdFitness } from "react-icons/io";
+import { FaChartLine, FaRunning } from "react-icons/fa";
+import { GiFruitBowl, GiWeightLiftingUp } from "react-icons/gi";
 import { MdOutlineBloodtype } from "react-icons/md";
 import { FiLogOut, FiSettings } from "react-icons/fi";
 import { useMediaQuery } from 'react-responsive';
@@ -22,12 +23,22 @@ const SideNav = () => {
       icon: <IoMdHome className="text-2xl" />,
     },
     {
-      href: 'analysis',
+      href: '/analysis',
       title: 'Analysis',
       icon: <FaChartLine className="text-2xl" />,
     },
     {
-      href: 'testing',
+      href: '/diet-plan',
+      title: 'Diet and Nutrition',
+      icon: <GiFruitBowl className="text-2xl" />,
+    },
+    {
+      href: '/exercise-plan',
+      title: 'Exercise',
+      icon: <GiWeightLiftingUp className="text-2xl" />,
+    },
+    {
+      href: '/testing',
       title: 'Testing',
       icon: <MdOutlineBloodtype className="text-2xl" />,
     },
