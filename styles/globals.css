@@ -16,5 +16,27 @@
 }
 
 
+.input-hover:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  /* Hover animation for the update button */
+  .button-hover:hover {
+    background-color: #28a745; /* Change the background color on hover */
+    transition: background-color 0.3s ease-in-out;
+  }
+  .eye-button {
+    position: absolute;
+    right: 10px;
+    top: 70%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  .slow-spin{
+    animation-duration: 2s;
+  }
+  
+  
 
 
