@@ -83,7 +83,7 @@ const SideNav = () => {
         <li className="p-4 hover:bg-rose-900 hover:text-white" onClick={handleLogout}>
           <div className="flex items-center space-x-2">
             <FiLogOut className="text-2xl" />
-            <span className={`${collapsed ? 'hidden' : 'block'}`}>Logout</span>
+            <Link href="/login"><span className={`${collapsed ? 'hidden' : 'block'}`}>Logout</span></Link>
           </div>
         </li>
       </ul>
