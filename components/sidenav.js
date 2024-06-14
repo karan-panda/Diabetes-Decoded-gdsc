@@ -38,7 +38,7 @@ const SideNav = () => {
       icon: <GiWeightLiftingUp className="text-2xl" />,
     },
     {
-      href: '/testing',
+      href: '/test-diabetes',
       title: 'Testing',
       icon: <MdOutlineBloodtype className="text-2xl" />,
     },

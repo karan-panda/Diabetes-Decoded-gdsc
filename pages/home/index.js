@@ -229,7 +229,7 @@ export default function Layout() {
               </Link>
             </div>
             <div className='bg-blue-200 p-2 w-full flex items-center font-semibold'>
-              <Link href="/testing">
+              <Link href="/test-diabtes">
                 <FaVial className='mr-2' />
                 Test diabetes
               </Link>
