@@ -1,59 +1,62 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import axios from 'axios';
 import Sidenav from '../../components/sidenav';
-// import '../../public/design/style.css'
 
 export default function Layout() {
-    const [htmlContent, setHtmlContent] = useState('');
-    const [formData, setFormData] = useState(null);
+    const [inputData, setInputData] = useState({
+        age: '',
+        gender: '',
+        pregnancies: 0,
+        bloodGlucose: '',
+        bloodPressure: '',
+        bmi: '',
+        skinThickness: '',
+        insulin: '',
+        diabetesPedigreeFunction: '',
+    });
+    const [prediction, setPrediction] = useState(null);
 
-    const handleFormSubmit = (event) => {
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setInputData({ ...inputData, [name]: value });
+    };
+
+    const handleGenderChange = (e) => {
+        const { value } = e.target;
+        setInputData({
+            ...inputData,
+            gender: value,
+            pregnancies: value === 'female' ? inputData.pregnancies : 0
+        });
+    };
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const formData = {
-            age: parseFloat(event.target.age.value),
-            gender: event.target.gender.value,
-            bloodGlucose: parseFloat(event.target.bloodGlucose.value),
-            bloodPressure: parseFloat(event.target.bloodPressure.value),
-            bmi: parseFloat(event.target.bmi.value),
-            skinThickness: parseFloat(event.target.skinThickness.value),
-            insulin: parseFloat(event.target.insulin.value),
-            hypertension: event.target.hypertension.value,
-            diabetesFamilyHistory: event.target.diabetesFamilyHistory.value,
-            physicallyActive: event.target.physicallyActive.value,
+        const payload = {
+            Pregnancies: inputData.gender === 'female' ? parseInt(inputData.pregnancies) : 0,
+            Glucose: parseInt(inputData.bloodGlucose),
+            BloodPressure: parseInt(inputData.bloodPressure.split('/')[0]), // Assuming we need systolic
+            SkinThickness: parseInt(inputData.skinThickness),
+            Insulin: parseInt(inputData.insulin),
+            BMI: parseFloat(inputData.bmi),
+            DiabetesPedigreeFunction: parseFloat(inputData.diabetesPedigreeFunction),
+            Age: parseInt(inputData.age)
         };
 
-        setFormData(formData);
-        predictDiabetes(formData);
-    };
-
-
-    const predictDiabetes = (formData) => {
-        // Define threshold values
-        const ageThreshold = 40;
-        const bloodGlucoseThreshold = 140; // Example threshold value
-        const bloodPressureThreshold = 80; // Example threshold value
-        const bmiThreshold = 25; // Example threshold value
-        const skinThicknessThreshold = 25; // Example threshold value
-        const insulinThreshold = 100; // Example threshold value
-
-        // Compare input values with threshold values
-        const isDiabetic =
-            formData.age > ageThreshold ||
-            formData.bloodGlucose > bloodGlucoseThreshold ||
-            formData.bloodPressure > bloodPressureThreshold ||
-            formData.bmi > bmiThreshold ||
-            formData.skinThickness > skinThicknessThreshold ||
-            formData.insulin > insulinThreshold;
-
-        // Navigate based on the prediction
-        if (isDiabetic) {
-            window.location.href = '/results/diabetic';
-        } else {
-            window.location.href = '/results/non-diabetic';
+        try {
+            const response = await axios.post('http://localhost:5000/predict', payload, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const result = response.data.prediction;
+            setPrediction(result);
+            window.location.href = `/results/${result}`;
+        } catch (error) {
+            console.error('Error making prediction:', error);
         }
     };
-
 
     return (
         <div className="flex bg-white">
@@ -61,28 +64,75 @@ export default function Layout() {
             <div className="overflow-y-scroll h-screen">
                 <h1 className="text-2xl font-semibold mb-4">Test Diabetes</h1>
                 <div className="bg-white rounded p-6 shadow-md">
-                    <form onSubmit={handleFormSubmit} className="flex">
-
+                    <form onSubmit={handleSubmit} className="flex">
                         <div className="w-1/2">
                             <div className="mb-4">
-                                <div className="mb-4">
-                                    <label htmlFor="age" className="block text-sm font-medium text-gray-700">Age:</label>
-                                    <input type="number" id="age" name="age" className="mt-1 p-2 border border-gray-300 rounded w-full" />
-                                </div>
+                                <label htmlFor="age" className="block text-sm font-medium text-gray-700">Age:</label>
+                                <input
+                                    type="number"
+                                    id="age"
+                                    name="age"
+                                    value={inputData.age}
+                                    onChange={handleChange}
+                                    className="mt-1 p-2 border border-gray-300 rounded w-full"
+                                />
+                            </div>
+                            <div className="mb-4">
                                 <label htmlFor="gender" className="block text-sm font-medium text-gray-700">Gender:</label>
                                 <div className="mt-1">
-                                    <input id="male" name="gender" type="radio" className="mr-2" value="male" />
-                                    <label htmlFor="male" className="text-sm font-medium text-gray-700"> Male </label>
-                                    <input id="female" name="gender" type="radio" className="mr-2 ml-4" value="female" />
-                                    <label htmlFor="female" className="text-sm font-medium text-gray-700"> Female </label>
+                                    <input
+                                        id="male"
+                                        name="gender"
+                                        type="radio"
+                                        value="male"
+                                        checked={inputData.gender === 'male'}
+                                        onChange={handleGenderChange}
+                                        className="mr-2"
+                                    />
+                                    <label htmlFor="male" className="text-sm font-medium text-gray-700">Male</label>
+                                    <input
+                                        id="female"
+                                        name="gender"
+                                        type="radio"
+                                        value="female"
+                                        checked={inputData.gender === 'female'}
+                                        onChange={handleGenderChange}
+                                        className="mr-2 ml-4"
+                                    />
+                                    <label htmlFor="female" className="text-sm font-medium text-gray-700">Female</label>
                                 </div>
                             </div>
 
-                            <div class="mb-4 relative">
-                                <label for="bloodGlucose" class="block text-sm font-medium text-gray-700">Blood Glucose Level:</label>
-                                <div class="flex mt-1">
-                                    <input type="number" id="bloodGlucose" name="bloodGlucose" class="p-2 border border-r-0 border-gray-300 rounded-l w-full" />
-                                    <select id="unit" name="unit" class="border border-gray-300 rounded-r p-2 -ml-1">
+                            {inputData.gender === 'female' && (
+                                <div className="mb-4">
+                                    <label htmlFor="pregnancies" className="block text-sm font-medium text-gray-700">Pregnancies:</label>
+                                    <input
+                                        type="number"
+                                        id="pregnancies"
+                                        name="pregnancies"
+                                        value={inputData.pregnancies}
+                                        onChange={handleChange}
+                                        className="mt-1 p-2 border border-gray-300 rounded w-full"
+                                    />
+                                </div>
+                            )}
+
+                            <div className="mb-4 relative">
+                                <label htmlFor="bloodGlucose" className="block text-sm font-medium text-gray-700">Blood Glucose Level:</label>
+                                <div className="flex mt-1">
+                                    <input
+                                        type="number"
+                                        id="bloodGlucose"
+                                        name="bloodGlucose"
+                                        value={inputData.bloodGlucose}
+                                        onChange={handleChange}
+                                        className="p-2 border border-r-0 border-gray-300 rounded-l w-full"
+                                    />
+                                    <select
+                                        id="unit"
+                                        name="unit"
+                                        className="border border-gray-300 rounded-r p-2 -ml-1"
+                                    >
                                         <option value="mg/dL">mg/dL</option>
                                         <option value="mmol/L">mmol/L</option>
                                         <option value="%">% (A1C)</option>
@@ -101,13 +151,14 @@ export default function Layout() {
                                     placeholder="e.g., 120/80"
                                     pattern="\d{1,3}\/\d{1,3}"
                                     title="Format: systolic/diastolic e.g., 120/80"
+                                    value={inputData.bloodPressure}
+                                    onChange={handleChange}
                                     className="mt-1 p-2 border border-gray-300 rounded w-full"
                                 />
                                 <p className="mt-1 text-sm text-gray-600">
                                     Enter as 'Systolic/Diastolic', both in mmHg (e.g., 120/80).
                                 </p>
                             </div>
-
 
                             <div className="mb-4 relative">
                                 <label htmlFor="bmi" className="block text-sm font-medium text-gray-700">BMI (kg/m²):</label>
@@ -118,6 +169,8 @@ export default function Layout() {
                                         name="bmi"
                                         placeholder="Enter your BMI"
                                         step="0.01"
+                                        value={inputData.bmi}
+                                        onChange={handleChange}
                                         className="p-2 border border-r-0 border-gray-300 rounded-l w-full"
                                     />
                                     <div className="tooltip border border-gray-300 rounded-r p-2 -ml-1 bg-gray-200 relative">
@@ -133,7 +186,6 @@ export default function Layout() {
                                 </p>
                             </div>
 
-
                             <div className="mb-4 relative">
                                 <label htmlFor="skinThickness" className="block text-sm font-medium text-gray-700">Skin Thickness (mm):</label>
                                 <div className="flex mt-1 items-center">
@@ -142,6 +194,8 @@ export default function Layout() {
                                         id="skinThickness"
                                         name="skinThickness"
                                         placeholder="Enter skin thickness in mm"
+                                        value={inputData.skinThickness}
+                                        onChange={handleChange}
                                         className="p-2 border border-r-0 border-gray-300 rounded-l w-full"
                                     />
                                     <div className="tooltip border border-gray-300 rounded-r p-2 -ml-1 bg-gray-200 relative">
@@ -156,7 +210,6 @@ export default function Layout() {
                                 </p>
                             </div>
 
-
                             <div className="mb-4 relative">
                                 <label htmlFor="insulin" className="block text-sm font-medium text-gray-700">Insulin:</label>
                                 <div className="flex mt-1 items-center">
@@ -166,9 +219,15 @@ export default function Layout() {
                                             id="insulin"
                                             name="insulin"
                                             placeholder="Enter insulin level"
+                                            value={inputData.insulin}
+                                            onChange={handleChange}
                                             className="p-2 border border-gray-300 rounded-l w-3/4"
                                         />
-                                        <select id="insulinUnit" name="insulinUnit" className="p-2 border border-gray-300 rounded-r w-1/4">
+                                        <select
+                                            id="insulinUnit"
+                                            name="insulinUnit"
+                                            className="p-2 border border-gray-300 rounded-r w-1/4"
+                                        >
                                             <option value="microU/ml">microU/ml</option>
                                             <option value="pmol/L">pmol/L</option>
                                         </select>
@@ -187,35 +246,19 @@ export default function Layout() {
                                 </p>
                             </div>
 
-
                             <div className="mb-4">
-                                <label htmlFor="hypertension" className="block text-sm font-medium text-gray-700">Hypertension:</label>
-
-                                <select id="hypertension" name="hypertension" className="mt-1 p-2 border border-gray-300 rounded w-full">
-                                    <option value="no">No</option>
-                                    <option value="yes">Yes</option>
-                                </select>
+                                <label htmlFor="diabetesPedigreeFunction" className="block text-sm font-medium text-gray-700">Diabetes Pedigree Function:</label>
+                                <input
+                                    type="number"
+                                    id="diabetesPedigreeFunction"
+                                    name="diabetesPedigreeFunction"
+                                    value={inputData.diabetesPedigreeFunction}
+                                    onChange={handleChange}
+                                    className="mt-1 p-2 border border-gray-300 rounded w-full"
+                                    step="0.01"
+                                />
                             </div>
 
-                            <div className="mb-4">
-                                <label htmlFor="diabetesFamilyHistory" className="block text-sm font-medium text-gray-700">Family history of diabetes:</label>
-                                <select id="diabetesFamilyHistory" name="diabetesFamilyHistory" className="mt-1 p-2 border border-gray-300 rounded w-full">
-                                    <option value="no">No</option>
-                                    <option value="yes">Yes</option>
-                                </select>
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="physicallyActive" className="block text-sm font-medium text-gray-700">Physical Activity Level:</label>
-                                <select id="physicallyActive" name="physicallyActive" className="mt-1 p-2 border border-gray-300 rounded w-full">
-                                    <option value="not_active">Not Active</option>
-                                    <option value="rarely_active">Rarely Active (less than once a week)</option>
-                                    <option value="moderately_active">Moderately Active (1-3 days a week)</option>
-                                    <option value="active">Active (3-5 days a week)</option>
-                                    <option value="very_active">Very Active (6-7 days a week)</option>
-                                    <option value="daily_exercise">Daily Exercise or Intense Exercise 3-4 days a week</option>
-                                    <option value="intense_daily_exercise">Intense Exercise Daily or Physical Job</option>
-                                </select>
-                            </div>
                         </div>
 
                         <div className="w-1/2">
@@ -231,4 +274,3 @@ export default function Layout() {
         </div>
     );
 }
-
