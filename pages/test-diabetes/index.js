@@ -16,9 +16,21 @@ export default function Layout() {
     });
     const [prediction, setPrediction] = useState(null);
 
+    const [errors, setErrors] = useState({
+        age: false,
+        gender: false,
+        bloodGlucose: false,
+        bloodPressure: false,
+        bmi: false,
+        skinThickness: false,
+        insulin: false,
+        diabetesPedigreeFunction: false,
+    });
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setInputData({ ...inputData, [name]: value });
+        setErrors({ ...errors, [name]: false }); // Remove error if user starts typing in the field
     };
 
     const handleGenderChange = (e) => {
@@ -30,8 +42,25 @@ export default function Layout() {
         });
     };
 
-    const handleSubmit = async (event) => {
+   const handleSubmit = async (event) => {
         event.preventDefault();
+
+        // Check for any empty fields
+        const validationErrors = {};
+        let hasError = false;
+        Object.keys(inputData).forEach((key) => {
+            if (!inputData[key]) {
+                validationErrors[key] = true;
+                hasError = true;
+            } else {
+                validationErrors[key] = false;
+            }
+        });
+
+        if (hasError) {
+            setErrors(validationErrors);
+            return;
+        }
 
         const payload = {
             Pregnancies: inputData.gender === 'female' ? parseInt(inputData.pregnancies) : 0,
@@ -76,7 +105,9 @@ export default function Layout() {
                                     onChange={handleChange}
                                     className="mt-1 p-2 border border-gray-300 rounded w-full"
                                 />
+                                {errors.age && <p className="mt-1 text-sm text-red-500">* Age is required.</p>}
                             </div>
+
                             <div className="mb-4">
                                 <label htmlFor="gender" className="block text-sm font-medium text-gray-700">Gender:</label>
                                 <div className="mt-1">
@@ -101,6 +132,7 @@ export default function Layout() {
                                     />
                                     <label htmlFor="female" className="text-sm font-medium text-gray-700">Female</label>
                                 </div>
+                                {errors.gender && <p className="mt-1 text-sm text-red-500">* Gender is required.</p>}
                             </div>
 
                             {inputData.gender === 'female' && (
@@ -138,27 +170,30 @@ export default function Layout() {
                                         <option value="%">% (A1C)</option>
                                     </select>
                                 </div>
+                                {errors.bloodGlucose && <p className="mt-1 text-sm text-red-500">* Blood Glucose Level is required.</p>}
                             </div>
 
                             <div className="mb-4">
                                 <label htmlFor="bloodPressure" className="block text-sm font-medium text-gray-700">
-                                    Blood Pressure (systolic/diastolic in mmHg):
+                                    Blood Pressure (diastolic in mmHg):
                                 </label>
                                 <input
                                     type="text"
                                     id="bloodPressure"
                                     name="bloodPressure"
-                                    placeholder="e.g., 120/80"
-                                    pattern="\d{1,3}\/\d{1,3}"
-                                    title="Format: systolic/diastolic e.g., 120/80"
+                                    placeholder="e.g., 80"
+                                    pattern="\d{1,3}"
+                                    title="Enter diastolic blood pressure in mmHg"
                                     value={inputData.bloodPressure}
                                     onChange={handleChange}
                                     className="mt-1 p-2 border border-gray-300 rounded w-full"
                                 />
                                 <p className="mt-1 text-sm text-gray-600">
-                                    Enter as 'Systolic/Diastolic', both in mmHg (e.g., 120/80).
+                                    Enter diastolic blood pressure in mmHg (e.g., 80).
                                 </p>
+                                {errors.bloodPressure && <p className="mt-1 text-sm text-red-500">* Blood Pressure is required.</p>}
                             </div>
+
 
                             <div className="mb-4 relative">
                                 <label htmlFor="bmi" className="block text-sm font-medium text-gray-700">BMI (kg/m²):</label>
@@ -184,6 +219,7 @@ export default function Layout() {
                                 <p className="mt-1 text-sm text-gray-600">
                                     Hover over the info icon for the BMI formula and example.
                                 </p>
+                                {errors.bmi && <p className="mt-1 text-sm text-red-500">* BMI is required.</p>}
                             </div>
 
                             <div className="mb-4 relative">
@@ -208,6 +244,7 @@ export default function Layout() {
                                 <p className="mt-1 text-sm text-gray-600">
                                     Hover over the info icon for more about skin thickness measurement.
                                 </p>
+                                {errors.skinThickness && <p className="mt-1 text-sm text-red-500">* Skin Thickness is required.</p>}
                             </div>
 
                             <div className="mb-4 relative">
@@ -244,6 +281,7 @@ export default function Layout() {
                                 <p className="mt-1 text-sm text-gray-600">
                                     Hover over the info icon for more about insulin levels.
                                 </p>
+                                {errors.insulin && <p className="mt-1 text-sm text-red-500">* Insulin is required.</p>}
                             </div>
 
                             <div className="mb-4">
@@ -257,6 +295,7 @@ export default function Layout() {
                                     className="mt-1 p-2 border border-gray-300 rounded w-full"
                                     step="0.01"
                                 />
+                                {errors.diabetesPedigreeFunction && <p className="mt-1 text-sm text-red-500">* Diabetes Pedigree Function is required.</p>}
                             </div>
 
                         </div>
