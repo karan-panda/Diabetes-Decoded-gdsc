@@ -8,7 +8,8 @@ app = Flask(__name__)
 CORS(app)  
 
 scaler = joblib.load('scaler.pkl')
-model = tf.keras.models.load_model('model.h5')
+model = tf.keras.models.load_model('model.h5', compile=False)
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 @app.route('/predict', methods=['POST'])
 def predict():
