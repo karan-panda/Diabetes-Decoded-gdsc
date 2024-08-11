@@ -49,7 +49,8 @@
     "react-spinners": "^0.13.8",
     "react-use-clipboard": "^1.0.9",
     "regenerator-runtime": "^0.14.1",
-    "shepherd.js": "^12.0.5"
+    "shepherd.js": "^12.0.5",
+    "tesseract.js": "^5.1.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",
