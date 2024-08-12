@@ -57,7 +57,7 @@ const SideNav = () => {
   };
 
   return (
-    <nav className={`bg-gray-200 text-black transition-all duration-500 ease-in-out ${collapsed ? 'w-20' : 'w-64'} h-screen relative items-center`}>
+    <nav className={`bg-gray-200 text-black transition-all duration-500 ease-in-out ${collapsed ? 'w-20' : 'w-64'} h-screen relative items-center `}>
       <div className="flex justify-between items-center h-20 px-4">
         <h1 className={`${collapsed ? 'hidden' : 'block'} text-2xl font-bold`}>Dashboard</h1>
         <IoIosMenu className="text-2xl cursor-pointer" onClick={() => setCollapsed(!collapsed)} />
