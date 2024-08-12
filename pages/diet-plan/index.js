@@ -5,15 +5,17 @@ import axios from 'axios';
 import Head from 'next/head';
 import SearchNutrition from '../../components/SearchNutrition';
 import Sidenav from '../../components/sidenav';
-import { div } from '@tensorflow/tfjs';
 
 export default function Info() {
   return (
-    <div className="flex h-screen">
-      <div className="sticky top-0 left-0 h-screen">
-        <Sidenav />
+    <div className="flex h-screen overflow-hidden bg-gray-50">
+      {/* Sidenav */}
+      <div className="w-1/4">
+        <Sidenav className="fixed top-0 left-0 h-screen w-full" />
       </div>
-      <div className="min-h-screen bg-gray-50">
+
+      {/* Main Content */}
+      <div className="flex-1 overflow-y-scroll bg-gray-50 ml-1/4">
         <Head>
           <title>Nutrition and Recipes Search</title>
           <meta name="description" content="Search for nutrition information and recipes" />
