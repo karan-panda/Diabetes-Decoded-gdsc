@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidenav from '../../components/sidenav';
 import Tesseract from 'tesseract.js';
+import ChatBot from '@/components/Chatbot';
 
 export default function Layout() {
     const [inputData, setInputData] = useState({
@@ -187,6 +188,7 @@ export default function Layout() {
 
     return (
         <div className="flex bg-white">
+            <ChatBot></ChatBot>
             <Sidenav />
             <div className="overflow-y-scroll h-screen">
                 <h1 className="text-2xl font-semibold mb-4">Test Diabetes</h1>

@@ -1,11 +1,13 @@
 import ExercisePlan from "../../components/ExercisePlan";
 import React from 'react';
 import SideNav from "../../components/sidenav";
+import ChatBot from "@/components/Chatbot";
 
 const Index = () => {
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
       {/* Sidenav */}
+      <ChatBot></ChatBot>
       <div className="w-1/4">
         <SideNav />
       </div>

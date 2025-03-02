@@ -8,6 +8,8 @@ import { FaAppleAlt, FaRunning, FaVial } from 'react-icons/fa';
 import Modal from 'react-modal';
 import Shepherd from 'shepherd.js';
 import 'shepherd.js/dist/css/shepherd.css';
+import ChatBot from '@/components/Chatbot';
+
 
 export default function Layout() {
   const [tasks, setTasks] = useState([
@@ -193,6 +195,7 @@ export default function Layout() {
 
   return (
     <div className="flex h-screen bg-white text-black">
+      <ChatBot></ChatBot>
       <Sidenav />
       <div className="flex flex-col p-8 w-full">
         <h1 className="text-2xl font-bold mb-4">Hello User</h1>
