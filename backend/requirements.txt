@@ -1,7 +1,3 @@
-Flask==2.0.1
-joblib==1.0.1
-numpy==1.21.0
-flask-cors
-tensorflow==2.8.0 
-keras==2.8.0 
-protobuf==3.20.3
+version https://git-lfs.github.com/spec/v1
+oid sha256:7ae642c90605b49d09583d1f801a8117ab7bdf3fee91d07136e49ab12187b0e9
+size 107

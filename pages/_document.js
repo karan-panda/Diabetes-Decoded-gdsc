@@ -1,21 +1,3 @@
-import { Html, Head, Main, NextScript } from "next/document";
-
-export default function Document() {
-  return (
-    <Html lang="en">
-      <Head>
-        <link rel="icon" href="/favicon_io/favicon.ico" />
-        <script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-        <script src="http://threejs.org/examples/js/libs/stats.min.js"></script>
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png"  />
-        <link rel="manifest" href="/favicon_io/site.webmanifest" />
-      </Head>
-      <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  );
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e5363a0967ad74b17af4bf97ac59a5266035c9b2c0bfccc5f27d8ef4a4b8d39b
+size 855
