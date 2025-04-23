@@ -11,7 +11,7 @@ import Modal from "react-modal";
 import Shepherd from "shepherd.js";
 import "shepherd.js/dist/css/shepherd.css";
 import ChatBot from "@/components/Chatbot";
-import { getCurrentUserDisplayName, auth, fetchTasks } from "@/lib/firebase";
+import { getCurrentUserDisplayName, auth, fetchTasks, toggleTaskCompletion, addTask } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import {
   FaAppleAlt,
@@ -71,6 +71,10 @@ export default function Home() {
   const [tasks, setTasks] = useState([]);
   const [iconsPermutation, setIconsPermutation] = useState([]);
   const [colorsPermutation, setColorsPermutation] = useState([]);
+  const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+  const [newTaskName, setNewTaskName] = useState("");
+  const [isAddingTask, setIsAddingTask] = useState(false);
+  const [addTaskError, setAddTaskError] = useState("");
 
   // Fetch tasks from Firebase
   useEffect(() => {
@@ -150,8 +154,15 @@ export default function Home() {
     return () => unsubscribe();
   }, []);
 
-  const toggleCheckbox = (taskId) => {
-    setTasks(tasks.map((task) => (task.id === taskId ? { ...task, checked: !task.checked } : task)))
+  const toggleCheckbox = async (taskId) => {
+    try {
+      const updatedTasks = await toggleTaskCompletion(taskId);
+      setTasks(updatedTasks);
+    } catch (error) {
+      console.error("Error toggling task:", error);
+      // Optimistically update UI even if the API call fails
+      setTasks(tasks.map((task) => (task.id === taskId ? { ...task, checked: !task.checked } : task)));
+    }
   }
 
   const startTour = () => {
@@ -427,7 +438,10 @@ export default function Home() {
                   </div>
                 )}
 
-                <button className="mt-4 w-full py-2 bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 transition flex items-center justify-center">
+                <button
+                  onClick={() => setShowAddTaskModal(true)}
+                  className="mt-4 w-full py-2 bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 transition flex items-center justify-center"
+                >
                   <span className="mr-2">+</span> Add Custom Task
                 </button>
               </div>
@@ -534,6 +548,104 @@ export default function Home() {
               Start Tour
             </button>
           </div>
+        </div>
+      </Modal>
+
+      {/* Add Custom Task Modal */}
+      <Modal
+        isOpen={showAddTaskModal}
+        onRequestClose={() => {
+          setShowAddTaskModal(false);
+          setNewTaskName("");
+          setAddTaskError("");
+        }}
+        contentLabel="Add Custom Task"
+        className="fixed inset-0 flex items-center justify-center"
+        overlayClassName="fixed inset-0 bg-gray-800 bg-opacity-75"
+        ariaHideApp={false}
+      >
+        <div className="bg-white rounded-lg p-6 shadow-lg max-w-md w-full">
+          <h2 className="text-xl font-semibold mb-4">Add Custom Task</h2>
+          
+          {addTaskError && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded">
+              {addTaskError}
+            </div>
+          )}
+          
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            if (!newTaskName.trim()) {
+              setAddTaskError("Please enter a task name");
+              return;
+            }
+            
+            setIsAddingTask(true);
+            try {
+              const result = await addTask(newTaskName);
+              
+              // Refresh the full task list for consistency
+              const updatedTasks = await fetchTasks();
+              setTasks(updatedTasks);
+              
+              // Close modal and reset
+              setShowAddTaskModal(false);
+              setNewTaskName("");
+              setAddTaskError("");
+            } catch (error) {
+              console.error("Error adding task:", error);
+              setAddTaskError("Failed to add task. Please try again.");
+            } finally {
+              setIsAddingTask(false);
+            }
+          }}>
+            <div className="mb-4">
+              <label htmlFor="taskName" className="block text-sm font-medium text-gray-700 mb-1">
+                Task Name
+              </label>
+              <input
+                type="text"
+                id="taskName"
+                value={newTaskName}
+                onChange={(e) => setNewTaskName(e.target.value)}
+                placeholder="Enter your custom task"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={isAddingTask}
+              />
+            </div>
+            
+            <div className="flex justify-end space-x-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowAddTaskModal(false);
+                  setNewTaskName("");
+                  setAddTaskError("");
+                }}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
+                disabled={isAddingTask}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition flex items-center"
+                disabled={isAddingTask}
+              >
+                {isAddingTask ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Adding...
+                  </>
+                ) : (
+                  "Add Task"
+                )}
+              </button>
+            </div>
+          </form>
         </div>
       </Modal>
     </div>
