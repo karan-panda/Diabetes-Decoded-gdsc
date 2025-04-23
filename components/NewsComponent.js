@@ -10,7 +10,8 @@ const NewsComponent = () => {
 
   useEffect(() => {
     setLoading(true)
-    fetch("https://newsapi.org/v2/everything?q=diabetes&apiKey=272537c253ce4bb3b56199385a550c90")
+    // Use our internal API route instead of directly calling News API
+    fetch("/api/news")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok")
@@ -18,7 +19,7 @@ const NewsComponent = () => {
         return response.json()
       })
       .then((data) => {
-        setNews(data.articles?.slice(0, 5) || [])
+        setNews(data.articles || [])
         setLoading(false)
       })
       .catch((error) => {
