@@ -1,25 +1,114 @@
 "use client"
 
+import React from "react";
 import { useState, useEffect, useRef } from "react";
-
 import Calendar from "../../components/Calendar";
 import NewsComponent from "../../components/NewsComponent";
 import Link from "next/link";
 import { IoCheckmarkDoneCircle, IoInformationCircleOutline } from "react-icons/io5";
-import { FaAppleAlt, FaRunning, FaVial, FaChartLine, FaCalendarCheck, FaNewspaper } from "react-icons/fa";
+import { FaChartLine, FaCalendarCheck, FaNewspaper } from "react-icons/fa";
 import Modal from "react-modal";
 import Shepherd from "shepherd.js";
 import "shepherd.js/dist/css/shepherd.css";
 import ChatBot from "@/components/Chatbot";
-import { getCurrentUserDisplayName, auth } from "@/lib/firebase";
+import { getCurrentUserDisplayName, auth, fetchTasks } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import {
+  FaAppleAlt,
+  FaRunning,
+  FaVial,
+  FaHeartbeat,
+  FaCarrot,
+  FaDumbbell,
+  FaWalking,
+  FaBiking,
+  FaLeaf,
+  FaFish,
+  FaBed,
+  FaUtensils
+} from "react-icons/fa";
 
 export default function Home() {
-  const [tasks, setTasks] = useState([
-    { id: 1, name: "Take blood glucose reading", checked: false, icon: <FaVial className="text-purple-600" /> },
-    { id: 2, name: "Follow recommended diet plan", checked: false, icon: <FaAppleAlt className="text-green-600" /> },
-    { id: 3, name: "Complete 30 min exercise", checked: false, icon: <FaRunning className="text-blue-600" /> },
-  ])
+
+  const taskIcons = [
+    FaAppleAlt,   // Food/fruit
+    FaCarrot,     // Food/vegetable
+    FaFish,       // Food/protein
+    FaUtensils,   // General food/meal
+    FaRunning,    // Running/workout
+    FaDumbbell,   // Strength/workout
+    FaWalking,    // Walking/activity
+    FaBiking,     // Cycling/activity
+    FaHeartbeat,  // Heart/health
+    FaLeaf,       // Healthy/natural
+    FaVial,       // Medical/test
+    FaBed         // Sleep/rest
+  ];
+  const taskColors = [
+    "text-purple-600",
+    "text-green-600",
+    "text-blue-600",
+    "text-red-500",
+    "text-yellow-500",
+    "text-pink-500",
+    "text-orange-500",
+    "text-teal-600",
+    "text-indigo-600",
+    "text-gray-700",
+    "text-lime-600",
+    "text-emerald-600",
+    "text-cyan-600",
+    "text-fuchsia-600",
+    "text-rose-600"
+  ];
+
+  // Utility to get a random permutation of icons/colors
+  function getRandomPermutation(arr, count) {
+    const shuffled = arr.slice().sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  }
+
+  const [tasks, setTasks] = useState([]);
+  const [iconsPermutation, setIconsPermutation] = useState([]);
+  const [colorsPermutation, setColorsPermutation] = useState([]);
+
+  // Fetch tasks from Firebase
+  useEffect(() => {
+    async function loadTasks() {
+      const tasksFromDb = await fetchTasks();
+      if (Array.isArray(tasksFromDb) && tasksFromDb.length > 0) {
+        setTasks(tasksFromDb);
+      } else {
+        // Fallback to default tasks if none found in database
+        setTasks([
+          { id: 1, name: "Take blood glucose reading", checked: false },
+          { id: 2, name: "Follow recommended diet plan", checked: false },
+          { id: 3, name: "Complete 30 min exercise", checked: false },
+        ]);
+      }
+    }
+    
+    loadTasks();
+  }, []);
+  
+  // Update permutations when tasks change
+  useEffect(() => {
+    if (tasks.length > 0) {
+      setIconsPermutation(getRandomPermutation(taskIcons, tasks.length));
+      setColorsPermutation(getRandomPermutation(taskColors, tasks.length));
+    }
+  }, [tasks]);
+
+  // Add this to ensure we have default values
+  useEffect(() => {
+    // Initialize with empty arrays to prevent undefined access
+    if (iconsPermutation.length === 0 && tasks.length > 0) {
+      setIconsPermutation(getRandomPermutation(taskIcons, tasks.length));
+    }
+    if (colorsPermutation.length === 0 && tasks.length > 0) {
+      setColorsPermutation(getRandomPermutation(taskColors, tasks.length));
+    }
+  }, [iconsPermutation, colorsPermutation, tasks]);
 
   const [allTasksCompleted, setAllTasksCompleted] = useState(false)
   const [showTourModal, setShowTourModal] = useState(false)
@@ -299,21 +388,26 @@ export default function Home() {
                 <FaCalendarCheck className="mr-2 text-green-600" /> Daily Health Tasks
               </h2>
               <div className="space-y-3">
-                {tasks.map((task) => (
+                {tasks.map((task, index) => (
                   <div
                     key={task.id}
                     className={`flex items-center justify-between p-4 rounded-md transition-all ${
                       task.checked
-                        ? "bg-green-50 border border-green-200"
-                        : "bg-gray-50 border border-gray-200 hover:border-blue-200 hover:bg-blue-50"
-                    }`}
+                      ? "bg-green-50 border border-green-200"
+                      : "bg-gray-50 border border-gray-200 hover:border-blue-200 hover:bg-blue-50"
+                      }`}
                   >
+
                     <div className="flex items-center">
-                      {task.icon}
+                      {iconsPermutation[index] 
+                        ? React.createElement(iconsPermutation[index], { className: colorsPermutation[index] || "text-blue-600" })
+                        : <FaAppleAlt className="text-blue-600" /> // Default fallback icon
+                      }
                       <span className={`ml-3 ${task.checked ? "line-through text-gray-500" : "text-gray-800"}`}>
                         {task.name}
                       </span>
                     </div>
+
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
