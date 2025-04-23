@@ -253,7 +253,7 @@ function LandingPage() {
             expert guidance, and community support - all in one place.
           </p>
           <div className="flex justify-center gap-4">
-            <Link href="/register">
+            <Link href="/login">
               <button className="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-full text-lg transition duration-300 ease-in-out transform hover:scale-105">
                 Start Now
               </button>

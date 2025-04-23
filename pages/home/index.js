@@ -1,245 +1,430 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Sidenav from '../../components/sidenav';
-import Calendar from '../../components/Calendar';
-import NewsComponent from '../../components/NewsComponent';
-import Link from "next/link";
-import { IoCheckmarkDoneCircle, IoCheckmarkDoneSharp } from 'react-icons/io5';
-import { FaAppleAlt, FaRunning, FaVial } from 'react-icons/fa';
-import Modal from 'react-modal';
-import Shepherd from 'shepherd.js';
-import 'shepherd.js/dist/css/shepherd.css';
-import ChatBot from '@/components/Chatbot';
+"use client"
 
+import { useState, useEffect, useRef } from "react"
+import Sidenav from "../../components/sidenav"
+import Calendar from "../../components/Calendar"
+import NewsComponent from "../../components/NewsComponent"
+import Link from "next/link"
+import { IoCheckmarkDoneCircle, IoInformationCircleOutline } from "react-icons/io5"
+import { FaAppleAlt, FaRunning, FaVial, FaChartLine, FaCalendarCheck, FaNewspaper } from "react-icons/fa"
+import Modal from "react-modal"
+import Shepherd from "shepherd.js"
+import "shepherd.js/dist/css/shepherd.css"
+import ChatBot from "@/components/Chatbot"
 
-export default function Layout() {
+export default function Home() {
   const [tasks, setTasks] = useState([
-    { id: 1, name: 'Daily test', checked: false },
-    { id: 2, name: 'Follow diet', checked: false },
-    { id: 3, name: 'Follow exercise', checked: false }
-  ]);
+    { id: 1, name: "Take blood glucose reading", checked: false, icon: <FaVial className="text-purple-600" /> },
+    { id: 2, name: "Follow recommended diet plan", checked: false, icon: <FaAppleAlt className="text-green-600" /> },
+    { id: 3, name: "Complete 30 min exercise", checked: false, icon: <FaRunning className="text-blue-600" /> },
+  ])
 
-  const [allTasksCompleted, setAllTasksCompleted] = useState(false);
-  const calendarRef = useRef(null);
-  const taskListRef = useRef(null);
-  const newsComponentRef = useRef(null);
-  const linksRef = useRef(null);
+  const [allTasksCompleted, setAllTasksCompleted] = useState(false)
+  const [showTourModal, setShowTourModal] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
+
+  // References for tour
+  const calendarRef = useRef(null)
+  const taskListRef = useRef(null)
+  const newsComponentRef = useRef(null)
+  const linksRef = useRef(null)
+  const statsRef = useRef(null)
 
   useEffect(() => {
-    setAllTasksCompleted(tasks.every(task => task.checked));
-  }, [tasks]);
+    setAllTasksCompleted(tasks.every((task) => task.checked))
+  }, [tasks])
+
+  useEffect(() => {
+    // Show tour modal after a short delay when component mounts
+    const timer = setTimeout(() => {
+      setShowTourModal(true)
+    }, 1000)
+
+    return () => clearTimeout(timer)
+  }, [])
 
   const toggleCheckbox = (taskId) => {
-    setTasks(tasks.map(task =>
-      task.id === taskId ? { ...task, checked: !task.checked } : task
-    ));
-  };
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+    setTasks(tasks.map((task) => (task.id === taskId ? { ...task, checked: !task.checked } : task)))
+  }
 
   const startTour = () => {
+    setShowTourModal(false)
+
     const tour = new Shepherd.Tour({
       defaultStepOptions: {
         cancelIcon: {
-          enabled: true
-        }
+          enabled: true,
+        },
+        classes: "shadow-md rounded-lg",
+        scrollTo: true,
       },
-      useModalOverlay: true
-    });
+      useModalOverlay: true,
+    })
 
     tour.addStep({
-      title: '<strong>Calendar</strong>',
-      text: '📅 Track your consistency with our streak-like calendar. Easily monitor your daily habits and celebrate your progress towards a healthier lifestyle.',
+      title: "<strong>Welcome to Your Dashboard</strong>",
+      text: "This tour will guide you through the main features of your diabetes management dashboard.",
+      buttons: [
+        {
+          text: "Next",
+          action: tour.next,
+        },
+      ],
+    })
+
+    tour.addStep({
+      title: "<strong>Health Statistics</strong>",
+      text: "📊 View your key health metrics at a glance. These cards show your current glucose levels, activity progress, and other important health indicators.",
+      attachTo: {
+        element: statsRef.current,
+        on: "bottom",
+      },
+      buttons: [
+        {
+          text: "Next",
+          action: tour.next,
+        },
+      ],
+    })
+
+    tour.addStep({
+      title: "<strong>Calendar</strong>",
+      text: "📅 Track your consistency with our streak-like calendar. When you complete all daily tasks, a checkmark appears on today's date to celebrate your progress.",
       attachTo: {
         element: calendarRef.current,
-        on: 'bottom'
+        on: "bottom",
       },
       buttons: [
         {
-          text: 'Next',
-          action: () => tour.next()
-        }
-      ]
-    });
+          text: "Next",
+          action: tour.next,
+        },
+      ],
+    })
 
     tour.addStep({
-      title: '<strong>Task List</strong>',
-      text: '📝 Get personalized daily tasks tailored to your needs. Stay on top of your diabetes management with custom activities like new recipes, exercises, and glucose testing reminders.',
+      title: "<strong>Daily Tasks</strong>",
+      text: "📝 Manage your personalized daily tasks tailored to your health needs. Check off tasks as you complete them to maintain your health routine.",
       attachTo: {
         element: taskListRef.current,
-        on: 'bottom'
+        on: "bottom",
       },
       buttons: [
         {
-          text: 'Next',
-          action: tour.next
-        }
-      ]
-    });
+          text: "Next",
+          action: tour.next,
+        },
+      ],
+    })
 
     tour.addStep({
-      title: '<strong>News Component</strong>',
-      text: '📰 Stay updated with the latest in diabetes care. Our news component delivers current research, treatments, and tips to keep you informed and empowered.',
+      title: "<strong>Diabetes News</strong>",
+      text: "📰 Stay updated with the latest in diabetes care. Our news component delivers current research, treatments, and tips to keep you informed and empowered.",
       attachTo: {
         element: newsComponentRef.current,
-        on: 'bottom'
+        on: "top",
       },
       buttons: [
         {
-          text: 'Next',
-          action: tour.next
-        }
-      ]
-    });
+          text: "Next",
+          action: tour.next,
+        },
+      ],
+    })
 
     tour.addStep({
-      title: '<strong>Navigation Links</strong>',
+      title: "<strong>Quick Access</strong>",
       text: `<div><strong>Quickly access essential services:</strong></div>
       <ul>
-        <li><strong>🥗 Healthy Diet Plan:</strong> Customized diet plans for managing diabetes.</li>
-        <li><strong>🏋️ Exercise Plan:</strong> Tailored exercise routines for your health.</li>
-        <li><strong>🩸 Test Diabetes:</strong> Easy access to blood sugar testing options.</li>
+        <li><strong>🥗 Diet Plan:</strong> Customized meal plans for managing diabetes.</li>
+        <li><strong>🏋️ Exercise Plan:</strong> Tailored workout routines for your health.</li>
+        <li><strong>🩸 Test Diabetes:</strong> Easy access to risk assessment tools.</li>
       </ul>`,
       attachTo: {
         element: linksRef.current,
-        on: 'bottom'
+        on: "left",
       },
       buttons: [
         {
-          text: 'End tour',
-          action: tour.next
-        }
-      ]
-    });
+          text: "Finish Tour",
+          action: tour.complete,
+        },
+      ],
+    })
 
-    // for styling the buttons of tours
-    tour.on('show', function () {
+    // Style the tour buttons
+    tour.on("show", () => {
       setTimeout(() => {
-        document.querySelectorAll('.shepherd-button').forEach(button => {
-          button.style.backgroundColor = '#b71c1c'; // rose dark color
-          button.style.color = 'white';
+        document.querySelectorAll(".shepherd-button").forEach((button) => {
+          button.style.backgroundColor = "#b71c1c"
+          button.style.color = "white"
           button.onmouseover = function () {
-            this.style.backgroundColor = '#d32f2f';
-          };
+            this.style.backgroundColor = "#d32f2f"
+          }
           button.onmouseout = function () {
-            this.style.backgroundColor = '#b71c1c';
-          };
-        });
-      }, 0);
-    });
+            this.style.backgroundColor = "#b71c1c"
+          }
+        })
+      }, 0)
+    })
 
-    tour.start();
+    tour.start()
+  }
 
-    closeModal();
-  };
-
-  useEffect(() => {
-    if (calendarRef.current && taskListRef.current && newsComponentRef.current && linksRef.current) {
-      openModal();
-    }
-  }, [calendarRef, taskListRef, newsComponentRef, linksRef]);
-
-  function TaskList() {
-    return (
-      <div className="bg-gray-200 rounded-lg p-4 flex-grow text-black">
-        <Modal
-          isOpen={isModalOpen}
-          onRequestClose={closeModal}
-          contentLabel="Tour Confirmation"
-          className="fixed inset-0 flex items-center justify-center"
-          overlayClassName="fixed inset-0 bg-gray-800 bg-opacity-75"
-        >
-          <div className="bg-white rounded-lg p-6 shadow-lg max-w-sm w-full">
-            <h2 className="text-xl font-semibold mb-4">Do you want to start a guided tour?</h2>
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={startTour}
-                className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700"
-              >
-                Yes
-              </button>
-              <button
-                onClick={closeModal}
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
-              >
-                No
-              </button>
-            </div>
-          </div>
-        </Modal>
-
-        <h2 className="text-lg font-semibold mb-4">Tasks</h2>
-        <div className="space-y-4">
-          {tasks.map(task => (
-            <div className="flex items-center justify-between bg-white p-4 rounded-md shadow" key={task.id}>
-              <div className="flex items-center">
-                <IoCheckmarkDoneCircle className={`${task.checked ? 'line-through text-red-700' : ''} mr-4`} />
-                <span className={task.checked ? 'line-through text-red-700' : ''}>{task.name}</span>
-              </div>
-              <input
-                type="checkbox"
-                checked={task.checked}
-                onChange={() => toggleCheckbox(task.id)}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+  // Get greeting based on time of day
+  const getGreeting = () => {
+    const hour = new Date().getHours()
+    if (hour < 12) return "Good Morning"
+    if (hour < 18) return "Good Afternoon"
+    return "Good Evening"
   }
 
   return (
-    <div className="flex h-screen bg-white text-black">
-      <ChatBot></ChatBot>
-      <Sidenav />
-      <div className="flex flex-col p-8 w-full">
-        <h1 className="text-2xl font-bold mb-4">Hello User</h1>
-        <p className="">Welcome to Diabetes Decoded</p>
+    <div className="flex h-screen overflow-hidden bg-gray-50">
+      <ChatBot />
 
-        <div className="flex flex-col sm:flex-row space-y-8 sm:space-y-0 sm:space-x-8 mt-8">
-          <div className="calendar-wrapper" ref={calendarRef}>
-            <Calendar allTasksCompleted={allTasksCompleted} />
+      {/* Sidenav */}
+      <div className="w-1/4 fixed h-screen">
+        <Sidenav onToggleCollapse={(state) => setCollapsed(state)} />
+      </div>
+
+      {/* Main Content */}
+      <div className={`flex-1 ${collapsed ? "ml-20" : "ml-[25%]"} overflow-y-auto transition-all duration-300`}>
+        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+          {/* Header Section */}
+          <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg mb-8">
+            <div className="px-6 py-8 sm:p-10">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h1 className="text-3xl font-extrabold text-white tracking-tight">{getGreeting()}, Alex</h1>
+                  <p className="mt-2 text-lg text-blue-100">Welcome to your diabetes management dashboard</p>
+                </div>
+                <button
+                  onClick={() => setShowTourModal(true)}
+                  className="mt-4 md:mt-0 flex items-center bg-white text-blue-700 px-4 py-2 rounded-lg shadow hover:bg-blue-50 transition"
+                >
+                  <IoInformationCircleOutline className="mr-2" /> Take a Tour
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div ref={taskListRef} className="w-full">
-            <TaskList />
-          </div>
-        </div>
+          {/* Stats Section */}
+          <div ref={statsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border-l-4 border-blue-500">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-500 uppercase tracking-wider">Glucose Level</p>
+                  <p className="text-2xl font-bold text-gray-800">124 mg/dL</p>
+                  <p className="text-xs text-green-600 flex items-center mt-1">
+                    <span className="inline-block mr-1">↓</span> 5% from yesterday
+                  </p>
+                </div>
+                <div className="bg-blue-100 p-3 rounded-full">
+                  <FaVial className="text-blue-600 text-xl" />
+                </div>
+              </div>
+            </div>
 
-        <div className="flex flex-col lg:flex-row mt-8 space-y-8 lg:space-y-0 lg:space-x-8">
-          <div className="bg-gray-200 rounded-lg p-4 flex-grow space-y-4 w-full lg:w-2/3" ref={newsComponentRef}>
-            <div className='bg-white rounded-md'>
+            <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border-l-4 border-green-500">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-500 uppercase tracking-wider">Activity</p>
+                  <p className="text-2xl font-bold text-gray-800">6,240 steps</p>
+                  <p className="text-xs text-green-600 flex items-center mt-1">
+                    <span className="inline-block mr-1">↑</span> 12% from yesterday
+                  </p>
+                </div>
+                <div className="bg-green-100 p-3 rounded-full">
+                  <FaRunning className="text-green-600 text-xl" />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border-l-4 border-purple-500">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-500 uppercase tracking-wider">Streak</p>
+                  <p className="text-2xl font-bold text-gray-800">7 days</p>
+                  <p className="text-xs text-purple-600 flex items-center mt-1">Keep it up!</p>
+                </div>
+                <div className="bg-purple-100 p-3 rounded-full">
+                  <FaCalendarCheck className="text-purple-600 text-xl" />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border-l-4 border-yellow-500">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-500 uppercase tracking-wider">Next Appointment</p>
+                  <p className="text-2xl font-bold text-gray-800">Mar 15</p>
+                  <p className="text-xs text-gray-600 flex items-center mt-1">Dr. Johnson at 10:00 AM</p>
+                </div>
+                <div className="bg-yellow-100 p-3 rounded-full">
+                  <FaCalendarCheck className="text-yellow-600 text-xl" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Calendar and Tasks Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div ref={calendarRef} className="bg-white p-6 rounded-lg shadow-sm">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center">
+                <FaCalendarCheck className="mr-2 text-blue-600" /> Your Health Calendar
+              </h2>
+              <div className="calendar-wrapper">
+                <Calendar allTasksCompleted={allTasksCompleted} />
+              </div>
+            </div>
+
+            <div ref={taskListRef} className="bg-white p-6 rounded-lg shadow-sm">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center">
+                <FaCalendarCheck className="mr-2 text-green-600" /> Daily Health Tasks
+              </h2>
+              <div className="space-y-3">
+                {tasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className={`flex items-center justify-between p-4 rounded-md transition-all ${
+                      task.checked
+                        ? "bg-green-50 border border-green-200"
+                        : "bg-gray-50 border border-gray-200 hover:border-blue-200 hover:bg-blue-50"
+                    }`}
+                  >
+                    <div className="flex items-center">
+                      {task.icon}
+                      <span className={`ml-3 ${task.checked ? "line-through text-gray-500" : "text-gray-800"}`}>
+                        {task.name}
+                      </span>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="sr-only peer"
+                        checked={task.checked}
+                        onChange={() => toggleCheckbox(task.id)}
+                      />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                ))}
+
+                {allTasksCompleted && (
+                  <div className="mt-4 p-4 bg-green-100 border border-green-300 rounded-md text-green-800 flex items-center">
+                    <IoCheckmarkDoneCircle className="text-2xl mr-2" />
+                    <span>Great job! You've completed all your tasks for today.</span>
+                  </div>
+                )}
+
+                <button className="mt-4 w-full py-2 bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 transition flex items-center justify-center">
+                  <span className="mr-2">+</span> Add Custom Task
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* News and Quick Links Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div ref={newsComponentRef} className="lg:col-span-2 bg-white p-6 rounded-lg shadow-sm">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center">
+                <FaNewspaper className="mr-2 text-purple-600" /> Latest Diabetes News
+              </h2>
               <NewsComponent />
             </div>
-          </div>
 
-          <div className="bg-gray-200 rounded-md p-4  space-y-6 w-full lg:w-1/3 flex flex-col items-center justify-center" ref={linksRef}>
-            <div className='bg-pink-200 p-2 w-full flex items-center font-semibold'>
-              <Link href="/diet-plan">
-                <FaAppleAlt className='mr-2' />
-                Healthy diet plan
-              </Link>
-            </div>
-            <div className='bg-green-200 p-2 w-full flex items-center font-semibold'>
-              <Link href="/exercise-plan">
-                <FaRunning className='mr-2' />
-                Exercise Plan
-              </Link>
-            </div>
-            <div className='bg-blue-200 p-2 w-full flex items-center font-semibold'>
-              <Link href="/test-diabtes">
-                <FaVial className='mr-2' />
-                Test diabetes
-              </Link>
+            <div ref={linksRef} className="bg-white p-6 rounded-lg shadow-sm">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800">Quick Access</h2>
+              <div className="space-y-3">
+                <Link
+                  href="/diet-plan"
+                  className="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition"
+                >
+                  <div className="bg-green-100 p-3 rounded-full mr-3">
+                    <FaAppleAlt className="text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-800">Diet Plan</h3>
+                    <p className="text-sm text-gray-600">Personalized nutrition guidance</p>
+                  </div>
+                </Link>
+
+                <Link
+                  href="/exercise-plan"
+                  className="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition"
+                >
+                  <div className="bg-blue-100 p-3 rounded-full mr-3">
+                    <FaRunning className="text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-800">Exercise Plan</h3>
+                    <p className="text-sm text-gray-600">Tailored fitness routines</p>
+                  </div>
+                </Link>
+
+                <Link
+                  href="/test-diabetes"
+                  className="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition"
+                >
+                  <div className="bg-purple-100 p-3 rounded-full mr-3">
+                    <FaVial className="text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-800">Test Diabetes</h3>
+                    <p className="text-sm text-gray-600">Risk assessment tools</p>
+                  </div>
+                </Link>
+
+                <Link
+                  href="/analysis"
+                  className="flex items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition"
+                >
+                  <div className="bg-yellow-100 p-3 rounded-full mr-3">
+                    <FaChartLine className="text-yellow-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-800">Analytics</h3>
+                    <p className="text-sm text-gray-600">View your health trends</p>
+                  </div>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Tour Modal */}
+      <Modal
+        isOpen={showTourModal}
+        onRequestClose={() => setShowTourModal(false)}
+        contentLabel="Tour Confirmation"
+        className="fixed inset-0 flex items-center justify-center"
+        overlayClassName="fixed inset-0 bg-gray-800 bg-opacity-75"
+        ariaHideApp={false}
+      >
+        <div className="bg-white rounded-lg p-6 shadow-lg max-w-md w-full">
+          <h2 className="text-xl font-semibold mb-2">Welcome to Diabetes Decoded</h2>
+          <p className="text-gray-600 mb-4">
+            Would you like to take a quick tour to learn about the features of your dashboard?
+          </p>
+          <div className="flex justify-end space-x-4">
+            <button
+              onClick={() => setShowTourModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
+            >
+              Skip
+            </button>
+            <button
+              onClick={startTour}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+            >
+              Start Tour
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
-  );
+  )
 }
+
