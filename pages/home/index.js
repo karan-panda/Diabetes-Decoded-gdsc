@@ -304,7 +304,7 @@ export default function Home() {
 
 
       {/* Main Content */}
-      <div>
+      <div className='overflow-y-auto'>
         <div className="mx-auto py-8 px-4 sm:px-6 lg:px-8">
           {/* Header Section */}
           <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg mb-8">
