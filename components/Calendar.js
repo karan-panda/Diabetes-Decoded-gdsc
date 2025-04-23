@@ -1,12 +1,51 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Calendar from "react-calendar"
 import "react-calendar/dist/Calendar.css"
 import { IoCheckmarkDoneSharp } from "react-icons/io5"
+import { getCompletedDates, storeCompletedDate, areAllTasksCompleted } from "../lib/firebase"
 
 const MyCalendar = ({ allTasksCompleted }) => {
   const [date, setDate] = useState(new Date())
+  const [completedDates, setCompletedDates] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Load completed dates from Firestore
+    const loadCompletedDates = async () => {
+      setLoading(true)
+      try {
+        const dates = await getCompletedDates()
+        // Convert string dates to Date objects
+        const dateObjects = dates.map(dateStr => new Date(dateStr))
+        setCompletedDates(dateObjects)
+      } catch (error) {
+        console.error("Error loading completed dates:", error)
+      }
+      setLoading(false)
+    }
+
+    loadCompletedDates()
+  }, [])
+
+  useEffect(() => {
+    // When all tasks are completed for today, store the date in Firestore
+    const updateCompletionStatus = async () => {
+      if (allTasksCompleted) {
+        const areAllCompleted = await areAllTasksCompleted()
+        if (areAllCompleted) {
+          await storeCompletedDate()
+          // Refresh the completed dates
+          const dates = await getCompletedDates()
+          const dateObjects = dates.map(dateStr => new Date(dateStr))
+          setCompletedDates(dateObjects)
+        }
+      }
+    }
+
+    updateCompletionStatus()
+  }, [allTasksCompleted])
 
   const onChange = (newDate) => {
     setDate(newDate)
@@ -49,22 +88,34 @@ const MyCalendar = ({ allTasksCompleted }) => {
     }
   `
 
+  const isSameDay = (date1, date2) => {
+    return date1.getDate() === date2.getDate() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getFullYear() === date2.getFullYear()
+  }
+
   const tileContent = ({ date, view }) => {
-    if (
-      view === "month" &&
-      date.getDate() === new Date().getDate() &&
-      date.getMonth() === new Date().getMonth() &&
-      date.getFullYear() === new Date().getFullYear() &&
-      allTasksCompleted
-    ) {
-      return (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="absolute inset-0 bg-green-500 opacity-20 rounded-full"></div>
-          <IoCheckmarkDoneSharp className="text-green-700 text-xl z-10" />
-        </div>
-      )
+    if (view === "month") {
+      // Check if this date is in our completedDates array
+      const isCompleted = completedDates.some(completedDate => isSameDay(completedDate, date))
+      
+      // Check if this is today and all tasks are completed
+      const isToday = isSameDay(date, new Date()) && allTasksCompleted
+
+      if (isCompleted || isToday) {
+        return (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="absolute inset-0 bg-green-500 opacity-20 rounded-full"></div>
+            <IoCheckmarkDoneSharp className="text-green-700 text-xl z-10" />
+          </div>
+        )
+      }
     }
     return null
+  }
+
+  if (loading) {
+    return <div className="p-4 text-center">Loading calendar data...</div>
   }
 
   return (
