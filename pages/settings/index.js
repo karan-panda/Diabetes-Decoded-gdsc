@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { getAuth, updateEmail, updatePassword, updateProfile, onAuthStateChanged } from "firebase/auth"
 import { app } from "../../lib/firebase"
-import Sidenav from "../../components/sidenav"
+
 import {
   FaEye,
   FaEyeSlash,
@@ -118,8 +118,7 @@ export default function Settings() {
   }
 
   return (
-    <div className={`flex min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-50"}`}>
-      <Sidenav />
+    <div>
       <div className="container px-4 py-8 flex-1">
         <div className="max-w-5xl mx-auto">
           <div className={`mb-8 ${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg shadow-md p-6`}>

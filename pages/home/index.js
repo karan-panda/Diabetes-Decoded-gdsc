@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import Sidenav from "../../components/sidenav"
+
 import Calendar from "../../components/Calendar"
 import NewsComponent from "../../components/NewsComponent"
 import Link from "next/link"
@@ -183,14 +183,10 @@ export default function Home() {
     <div className="flex h-screen overflow-hidden bg-gray-50">
       <ChatBot />
 
-      {/* Sidenav */}
-      <div className="w-1/4 fixed h-screen">
-        <Sidenav onToggleCollapse={(state) => setCollapsed(state)} />
-      </div>
 
       {/* Main Content */}
-      <div className={`flex-1 ${collapsed ? "ml-20" : "ml-[25%]"} overflow-y-auto transition-all duration-300`}>
-        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div>
+        <div className="mx-auto py-8 px-4 sm:px-6 lg:px-8">
           {/* Header Section */}
           <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg mb-8">
             <div className="px-6 py-8 sm:p-10">
