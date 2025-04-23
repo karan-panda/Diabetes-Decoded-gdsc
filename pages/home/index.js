@@ -11,7 +11,8 @@ import Modal from "react-modal";
 import Shepherd from "shepherd.js";
 import "shepherd.js/dist/css/shepherd.css";
 import ChatBot from "@/components/Chatbot";
-import { getCurrentUserDisplayName } from "@/lib/firebase";
+import { getCurrentUserDisplayName, auth } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function Home() {
   const [tasks, setTasks] = useState([
@@ -37,35 +38,36 @@ export default function Home() {
   }, [tasks])
 
   useEffect(() => {
-    // Show tour modal after a short delay when component mounts
-    const timer = setTimeout(() => {
-      setShowTourModal(true)
-    }, 1000)
-
-    return () => clearTimeout(timer)
-  }, [])
+    // Check if user has already seen the tour
+    const hasSeenTour = localStorage.getItem("dashboardTourSeen") === "true";
+    if (!hasSeenTour) {
+      const timer = setTimeout(() => {
+        setShowTourModal(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else {
+      setShowTourModal(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchUserName = async () => {
-      try {
-        const fetchedName = getCurrentUserDisplayName();
-        // const fetchedName = "Karan";
-        if (fetchedName) {
-          setUserName(fetchedName)
-        }
-      } catch (error) {
-        console.error("Error fetching user name:", error)
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user && user.displayName) {
+        setUserName(user.displayName);
+      } else {
+        setUserName("user");
       }
-    }
-    fetchUserName()
-  }, [])
+    });
+    return () => unsubscribe();
+  }, []);
 
   const toggleCheckbox = (taskId) => {
     setTasks(tasks.map((task) => (task.id === taskId ? { ...task, checked: !task.checked } : task)))
   }
 
   const startTour = () => {
-    setShowTourModal(false)
+    setShowTourModal(false);
+    localStorage.setItem("dashboardTourSeen", "true");
 
     const tour = new Shepherd.Tour({
       defaultStepOptions: {
@@ -423,7 +425,10 @@ export default function Home() {
           </p>
           <div className="flex justify-end space-x-4">
             <button
-              onClick={() => setShowTourModal(false)}
+              onClick={() => {
+                setShowTourModal(false);
+                localStorage.setItem("dashboardTourSeen", "true");
+              }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
             >
               Skip
