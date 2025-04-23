@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import SideNav from "../../components/sidenav"
+
 import ExercisePlan from "../../components/ExercisePlan"
 import ChatBot from "@/components/Chatbot"
 import { FaDumbbell, FaHeartbeat, FaRunning, FaCalendarAlt, FaVideo, FaBookOpen } from "react-icons/fa"
@@ -15,14 +15,9 @@ const ExercisePlanPage = () => {
     <div className="flex h-screen overflow-hidden bg-gray-50">
       <ChatBot />
 
-      {/* Sidenav */}
-      <div className="w-1/4 fixed h-screen">
-        <SideNav />
-      </div>
-
       {/* Main Content */}
-      <div className="flex-1 ml-[25%] overflow-y-auto bg-gray-50">
-        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div >
+        <div className="mx-auto py-8 px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl shadow-lg mb-8">
             <div className="px-6 py-8 sm:p-10 sm:pb-6">
               <div className="flex items-center justify-between flex-wrap">

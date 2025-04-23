@@ -1,7 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
 import SearchNutrition from '../../components/SearchNutrition';
-import Sidenav from '../../components/sidenav';
 import ChatBot from '@/components/Chatbot';
 import { FaAppleAlt, FaCarrot, FaLeaf, FaUtensils, FaBookMedical, FaCalendarAlt } from 'react-icons/fa';
 import { GiMeal, GiCookingPot } from 'react-icons/gi';
@@ -11,15 +10,10 @@ export default function DietPlan() {
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
       <ChatBot />
-      
-      {/* Sidenav */}
-      <div className="w-1/4 fixed h-screen">
-        <Sidenav />
-      </div>
 
       {/* Main Content */}
-      <div className="flex-1 ml-[25%] overflow-y-auto bg-gray-50">
-        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div>
+        <div className="mx-auto py-8 px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl shadow-lg mb-8">
             <div className="px-6 py-8 sm:p-10 sm:pb-6">
               <div className="flex items-center justify-between flex-wrap">

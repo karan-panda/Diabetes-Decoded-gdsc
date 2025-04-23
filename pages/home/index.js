@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import Sidenav from "../../components/sidenav"
+
 import Calendar from "../../components/Calendar"
 import NewsComponent from "../../components/NewsComponent"
 import Link from "next/link"
@@ -89,7 +89,7 @@ export default function Home() {
 
     tour.addStep({
       title: "<strong>Calendar</strong>",
-      text: "📅 Track your consistency with our streak-like calendar. When you complete all daily tasks, a checkmark appears on today's date to celebrate your progress.",
+      text: "📅 Track your consistency with our streak-like calendar. When you complete all daily tasks, a checkmark appears on today&apos;s date to celebrate your progress.",
       attachTo: {
         element: calendarRef.current,
         on: "bottom",
@@ -183,14 +183,10 @@ export default function Home() {
     <div className="flex h-screen overflow-hidden bg-gray-50">
       <ChatBot />
 
-      {/* Sidenav */}
-      <div className="w-1/4 fixed h-screen">
-        <Sidenav onToggleCollapse={(state) => setCollapsed(state)} />
-      </div>
 
       {/* Main Content */}
-      <div className={`flex-1 ${collapsed ? "ml-20" : "ml-[25%]"} overflow-y-auto transition-all duration-300`}>
-        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div>
+        <div className="mx-auto py-8 px-4 sm:px-6 lg:px-8">
           {/* Header Section */}
           <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg mb-8">
             <div className="px-6 py-8 sm:p-10">
@@ -314,7 +310,7 @@ export default function Home() {
                 {allTasksCompleted && (
                   <div className="mt-4 p-4 bg-green-100 border border-green-300 rounded-md text-green-800 flex items-center">
                     <IoCheckmarkDoneCircle className="text-2xl mr-2" />
-                    <span>Great job! You've completed all your tasks for today.</span>
+                    <span>Great job! You&apos;ve completed all your tasks for today.</span>
                   </div>
                 )}
 

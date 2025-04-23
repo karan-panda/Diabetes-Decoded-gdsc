@@ -121,7 +121,7 @@ export default function Diabetic() {
                     <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
                       <h3 className="text-xl font-semibold text-blue-800 mb-3">Diet Plan</h3>
                       <p className="text-gray-700 mb-4">
-                        A proper diet is crucial for managing diabetes. We've created a personalized meal plan based on
+                        A proper diet is crucial for managing diabetes. We&apos;ve created a personalized meal plan based on
                         your profile.
                       </p>
                       <div className="grid grid-cols-2 gap-3 mb-4">

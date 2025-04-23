@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import axios from "axios"
-import Sidenav from "../../components/sidenav"
+// import Sidenav from "../../components/sidenav"
 import Tesseract from "tesseract.js"
 import ChatBot from "@/components/Chatbot"
 import { FaUpload, FaVial, FaHeartbeat, FaWeight, FaRulerVertical, FaSyringe, FaDna } from "react-icons/fa"
@@ -197,13 +197,13 @@ export default function TestDiabetes() {
       <ChatBot />
 
       {/* Sidenav */}
-      <div className="w-1/4 fixed h-screen">
+      {/* <div className="w-1/4 fixed h-screen">
         <Sidenav />
-      </div>
+      </div> */}
 
       {/* Main Content */}
-      <div className="flex-1 ml-[25%] overflow-y-auto bg-gray-50">
-        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div >
+        <div className="mx-auto py-8 px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl shadow-lg mb-8">
             <div className="px-6 py-8 sm:p-10 sm:pb-6">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -666,7 +666,7 @@ export default function TestDiabetes() {
                         <p className="text-gray-700">
                           Type 2 diabetes is a chronic condition that affects how your body metabolizes sugar. With type
                           2 diabetes, your body either resists the effects of insulin — a hormone that regulates the
-                          movement of sugar into your cells — or doesn't produce enough insulin to maintain normal
+                          movement of sugar into your cells — or doesn&apos;t produce enough insulin to maintain normal
                           glucose levels.
                         </p>
                       </div>

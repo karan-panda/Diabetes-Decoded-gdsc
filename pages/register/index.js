@@ -2,7 +2,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from 'next/router';
 import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { app } from "../firebase";
+import { app } from "../../lib/firebase";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 

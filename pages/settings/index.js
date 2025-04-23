@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { getAuth, updateEmail, updatePassword, updateProfile, onAuthStateChanged } from "firebase/auth"
-import { app } from "../firebase"
-import Sidenav from "../../components/sidenav"
+import { app } from "../../lib/firebase"
+
 import {
   FaEye,
   FaEyeSlash,
@@ -118,8 +118,7 @@ export default function Settings() {
   }
 
   return (
-    <div className={`flex min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-50"}`}>
-      <Sidenav />
+    <div>
       <div className="container px-4 py-8 flex-1">
         <div className="max-w-5xl mx-auto">
           <div className={`mb-8 ${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg shadow-md p-6`}>
@@ -217,7 +216,7 @@ export default function Settings() {
                         </button>
                       </div>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        Leave blank if you don't want to change your password
+                        Leave blank if you don&apos;t want to change your password
                       </p>
                     </div>
                   </div>
