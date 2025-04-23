@@ -12,7 +12,7 @@ export default function DietPlan() {
       <ChatBot />
 
       {/* Main Content */}
-      <div>
+      <div className='overflow-y-auto'>
         <div className="mx-auto py-8 px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl shadow-lg mb-8">
             <div className="px-6 py-8 sm:p-10 sm:pb-6">
