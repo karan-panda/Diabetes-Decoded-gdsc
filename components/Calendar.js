@@ -70,7 +70,13 @@ const MyCalendar = ({ allTasksCompleted }) => {
   return (
     <div>
       <style>{calendarStyles}</style>
-      <Calendar onChange={onChange} value={date} tileContent={tileContent} className="rounded-lg shadow-sm" />
+      <Calendar 
+        onChange={onChange} 
+        value={date} 
+        tileContent={tileContent} 
+        className="rounded-lg shadow-sm"
+        locale="en-US" // Fix hydration warning by forcing consistent locale
+      />
     </div>
   )
 }

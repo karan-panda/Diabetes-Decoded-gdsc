@@ -1,16 +1,17 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef } from "react";
 
-import Calendar from "../../components/Calendar"
-import NewsComponent from "../../components/NewsComponent"
-import Link from "next/link"
-import { IoCheckmarkDoneCircle, IoInformationCircleOutline } from "react-icons/io5"
-import { FaAppleAlt, FaRunning, FaVial, FaChartLine, FaCalendarCheck, FaNewspaper } from "react-icons/fa"
-import Modal from "react-modal"
-import Shepherd from "shepherd.js"
-import "shepherd.js/dist/css/shepherd.css"
-import ChatBot from "@/components/Chatbot"
+import Calendar from "../../components/Calendar";
+import NewsComponent from "../../components/NewsComponent";
+import Link from "next/link";
+import { IoCheckmarkDoneCircle, IoInformationCircleOutline } from "react-icons/io5";
+import { FaAppleAlt, FaRunning, FaVial, FaChartLine, FaCalendarCheck, FaNewspaper } from "react-icons/fa";
+import Modal from "react-modal";
+import Shepherd from "shepherd.js";
+import "shepherd.js/dist/css/shepherd.css";
+import ChatBot from "@/components/Chatbot";
+import { getCurrentUserDisplayName } from "@/lib/firebase";
 
 export default function Home() {
   const [tasks, setTasks] = useState([
@@ -22,6 +23,7 @@ export default function Home() {
   const [allTasksCompleted, setAllTasksCompleted] = useState(false)
   const [showTourModal, setShowTourModal] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
+  const [userName, setUserName] = useState("user")
 
   // References for tour
   const calendarRef = useRef(null)
@@ -41,6 +43,21 @@ export default function Home() {
     }, 1000)
 
     return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const fetchedName = getCurrentUserDisplayName();
+        // const fetchedName = "Karan";
+        if (fetchedName) {
+          setUserName(fetchedName)
+        }
+      } catch (error) {
+        console.error("Error fetching user name:", error)
+      }
+    }
+    fetchUserName()
   }, [])
 
   const toggleCheckbox = (taskId) => {
@@ -192,7 +209,7 @@ export default function Home() {
             <div className="px-6 py-8 sm:p-10">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <div>
-                  <h1 className="text-3xl font-extrabold text-white tracking-tight">{getGreeting()}, Alex</h1>
+                  <h1 className="text-3xl font-extrabold text-white tracking-tight">{getGreeting()}, {userName}</h1>
                   <p className="mt-2 text-lg text-blue-100">Welcome to your diabetes management dashboard</p>
                 </div>
                 <button
