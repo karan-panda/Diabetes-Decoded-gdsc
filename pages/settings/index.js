@@ -217,7 +217,7 @@ export default function Settings() {
                         </button>
                       </div>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        Leave blank if you don't want to change your password
+                        Leave blank if you don&apos;t want to change your password
                       </p>
                     </div>
                   </div>

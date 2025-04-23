@@ -89,7 +89,7 @@ export default function Home() {
 
     tour.addStep({
       title: "<strong>Calendar</strong>",
-      text: "📅 Track your consistency with our streak-like calendar. When you complete all daily tasks, a checkmark appears on today's date to celebrate your progress.",
+      text: "📅 Track your consistency with our streak-like calendar. When you complete all daily tasks, a checkmark appears on today&apos;s date to celebrate your progress.",
       attachTo: {
         element: calendarRef.current,
         on: "bottom",
@@ -314,7 +314,7 @@ export default function Home() {
                 {allTasksCompleted && (
                   <div className="mt-4 p-4 bg-green-100 border border-green-300 rounded-md text-green-800 flex items-center">
                     <IoCheckmarkDoneCircle className="text-2xl mr-2" />
-                    <span>Great job! You've completed all your tasks for today.</span>
+                    <span>Great job! You&apos;ve completed all your tasks for today.</span>
                   </div>
                 )}
 

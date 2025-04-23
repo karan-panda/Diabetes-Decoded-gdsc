@@ -84,9 +84,9 @@ const SearchNutrition = () => {
         <div>
           <h2 className="text-xl font-semibold mb-4">Navigating Diabetes, Food, & Nutrition</h2>
           <p className="mb-4">Explore how to navigate nutrition while living with diabetes—because when you eat right, you feel right.</p>
-          <p className="mb-4">Eating Right Doesn't Have to Be Boring.</p>
-          <p className="mb-4">Eating well with diabetes doesn't mean giving up your favorite foods, it's about finding the balance between keeping the flavors you love and incorporating the nutrients you need to live well with diabetes.</p>
-          <p className="mb-4">Simple swaps such as opting for the low-fat versions of cheeses and dressings, choosing lean meats, and using natural sweetners will all help you meet your health goals—and they'll taste great too!</p>
+          <p className="mb-4">Eating Right Doesn&apos;t Have to Be Boring.</p>
+          <p className="mb-4">Eating well with diabetes doesn&apos;t mean giving up your favorite foods, it&apos;s about finding the balance between keeping the flavors you love and incorporating the nutrients you need to live well with diabetes.</p>
+          <p className="mb-4">Simple swaps such as opting for the low-fat versions of cheeses and dressings, choosing lean meats, and using natural sweetners will all help you meet your health goals—and they&apos;ll taste great too!</p>
         </div>
       </div>
     </div>

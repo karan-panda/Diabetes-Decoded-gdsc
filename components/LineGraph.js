@@ -250,7 +250,7 @@ const HealthChart = () => {
         <div>
           <h3 className="font-semibold text-blue-700">AI Assistant Insight</h3>
           <p className="text-gray-700 mt-1">
-            Based on your {selectedParameter.toLowerCase()} data, you're maintaining healthy levels.
+            Based on your {selectedParameter.toLowerCase()} data, you&apos;re maintaining healthy levels.
             {selectedParameter === "Glucose" &&
               " Your glucose readings show good stability throughout the week. Consider maintaining your current diet and exercise routine."}
             {selectedParameter === "Blood Pressure" &&

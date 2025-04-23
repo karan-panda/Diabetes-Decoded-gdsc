@@ -666,7 +666,7 @@ export default function TestDiabetes() {
                         <p className="text-gray-700">
                           Type 2 diabetes is a chronic condition that affects how your body metabolizes sugar. With type
                           2 diabetes, your body either resists the effects of insulin — a hormone that regulates the
-                          movement of sugar into your cells — or doesn't produce enough insulin to maintain normal
+                          movement of sugar into your cells — or doesn&apos;t produce enough insulin to maintain normal
                           glucose levels.
                         </p>
                       </div>
