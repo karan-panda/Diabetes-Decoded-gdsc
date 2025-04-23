@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { getAuth, updateEmail, updatePassword, updateProfile, onAuthStateChanged } from "firebase/auth"
-import { app } from "../firebase"
+import { app } from "../../lib/firebase"
 import Sidenav from "../../components/sidenav"
 import {
   FaEye,

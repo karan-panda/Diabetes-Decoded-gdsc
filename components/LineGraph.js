@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import Chart from "chart.js/auto"
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore"
-import { db } from "../pages/firebase"
+import { db } from "../lib/firebase"
 import { BiSolidUpArrowAlt } from "react-icons/bi"
 import { BsRobot } from "react-icons/bs"
 

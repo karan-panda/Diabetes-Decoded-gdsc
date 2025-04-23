@@ -106,7 +106,7 @@
 import { useRef, useEffect, useState } from "react"
 import Chart from "chart.js/auto"
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore"
-import { db } from "../pages/firebase"
+import { db } from "../lib/firebase"
 import { FaRunning, FaBurn, FaArrowUp, FaArrowDown } from "react-icons/fa"
 
 const BarGraph = () => {
