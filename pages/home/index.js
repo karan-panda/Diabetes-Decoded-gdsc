@@ -11,7 +11,17 @@ import Modal from "react-modal";
 import Shepherd from "shepherd.js";
 import "shepherd.js/dist/css/shepherd.css";
 import ChatBot from "@/components/Chatbot";
-import { getCurrentUserDisplayName, auth, fetchTasks, toggleTaskCompletion, addTask } from "@/lib/firebase";
+import { 
+  getCurrentUserDisplayName, 
+  auth, 
+  fetchTasks, 
+  toggleTaskCompletion, 
+  addTask, 
+  getCompletedDates,
+  calculateMaxStreak,
+  storeCompletedDate,
+  removeCompletedDate
+} from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import {
   FaAppleAlt,
@@ -79,6 +89,7 @@ export default function Home() {
   const [addTaskError, setAddTaskError] = useState("");
   const [latestSteps, setLatestSteps] = useState(null);
   const [stepsLoading, setStepsLoading] = useState(true);
+  const [maxStreak, setMaxStreak] = useState(0);
 
   // Fetch tasks from Firebase
   useEffect(() => {
@@ -157,15 +168,81 @@ export default function Home() {
     });
     return () => unsubscribe();
   }, []);
+  
+  // Load the maximum streak
+  useEffect(() => {
+    async function loadMaxStreak() {
+      try {
+        const streak = await calculateMaxStreak();
+        setMaxStreak(streak || 0);
+      } catch (error) {
+        console.error("Error calculating maximum streak:", error);
+      }
+    }
+    
+    loadMaxStreak();
+  }, []);
 
   const toggleCheckbox = async (taskId) => {
     try {
+      // Check if this action would untick the last completed task
+      const isUnticking = tasks.find(task => task.id === taskId)?.checked === true;
+      const currentlyAllCompleted = tasks.every(task => task.checked);
+      
+      // Optimistically update UI immediately
+      const optimisticUpdatedTasks = tasks.map((task) => 
+        task.id === taskId ? { ...task, checked: !task.checked } : task
+      );
+      setTasks(optimisticUpdatedTasks);
+      
+      // Check if all tasks would be completed with this update
+      const wouldAllBeCompleted = optimisticUpdatedTasks.every(task => task.checked);
+      
+      // If completing all tasks, increment streak
+      if (wouldAllBeCompleted) {
+        setMaxStreak(prevStreak => prevStreak + 1);
+      } 
+      // If unticking when previously all completed, update the allTasksCompleted state immediately
+      else if (isUnticking && currentlyAllCompleted) {
+        setAllTasksCompleted(false);
+        // Start removing today's date from Firestore immediately
+        removeCompletedDate();
+      }
+      
+      // Now perform the actual backend operations
       const updatedTasks = await toggleTaskCompletion(taskId);
-      setTasks(updatedTasks);
+      
+      // Check if all tasks are now completed after backend update
+      const allCompleted = updatedTasks.every(task => task.checked);
+      setAllTasksCompleted(allCompleted);
+      
+      if (allCompleted) {
+        // Store the completed date
+        await storeCompletedDate();
+        
+        // Update the streak with actual value from backend
+        const newMaxStreak = await calculateMaxStreak();
+        setMaxStreak(newMaxStreak);
+      } else if (isUnticking && currentlyAllCompleted) {
+        // Make sure we've removed today's date if we're unticking a previously completed set
+        await removeCompletedDate();
+        
+        // Update the streak with actual value from backend
+        const newMaxStreak = await calculateMaxStreak();
+        setMaxStreak(newMaxStreak);
+      }
     } catch (error) {
       console.error("Error toggling task:", error);
-      // Optimistically update UI even if the API call fails
-      setTasks(tasks.map((task) => (task.id === taskId ? { ...task, checked: !task.checked } : task)));
+      // Revert to original state if there was an error
+      const originalTasks = await fetchTasks();
+      setTasks(originalTasks);
+      
+      // Update allTasksCompleted state based on fetched tasks
+      setAllTasksCompleted(originalTasks.every(task => task.checked));
+      
+      // Refresh the streak to ensure it's accurate
+      const actualStreak = await calculateMaxStreak();
+      setMaxStreak(actualStreak);
     }
   }
 
@@ -366,7 +443,7 @@ export default function Home() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-500 uppercase tracking-wider">Streak</p>
-                  <p className="text-2xl font-bold text-gray-800">7 days</p>
+                  <p className="text-2xl font-bold text-gray-800">{maxStreak} {maxStreak === 1 ? "day" : "days"}</p>
                   <p className="text-xs text-purple-600 flex items-center mt-1">Keep it up!</p>
                 </div>
                 <div className="bg-purple-100 p-3 rounded-full">

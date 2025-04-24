@@ -10,6 +10,7 @@ const MyCalendar = ({ allTasksCompleted }) => {
   const [date, setDate] = useState(new Date())
   const [completedDates, setCompletedDates] = useState([])
   const [loading, setLoading] = useState(true)
+  const [optimisticTodayCompleted, setOptimisticTodayCompleted] = useState(false)
 
   useEffect(() => {
     // Load completed dates from Firestore
@@ -30,9 +31,13 @@ const MyCalendar = ({ allTasksCompleted }) => {
   }, [])
 
   useEffect(() => {
-    // When all tasks are completed for today, store the date in Firestore
+    // When all tasks are completed for today, immediately update UI then store in Firestore
     const updateCompletionStatus = async () => {
       if (allTasksCompleted) {
+        // Immediately update UI optimistically
+        setOptimisticTodayCompleted(true)
+        
+        // Then perform the backend operations
         const areAllCompleted = await areAllTasksCompleted()
         if (areAllCompleted) {
           await storeCompletedDate()
@@ -40,7 +45,13 @@ const MyCalendar = ({ allTasksCompleted }) => {
           const dates = await getCompletedDates()
           const dateObjects = dates.map(dateStr => new Date(dateStr))
           setCompletedDates(dateObjects)
+        } else {
+          // Revert the optimistic update if backend says tasks aren't complete
+          setOptimisticTodayCompleted(false)
         }
+      } else {
+        // Immediately update UI when a task is unticked
+        setOptimisticTodayCompleted(false)
       }
     }
 
@@ -99,8 +110,8 @@ const MyCalendar = ({ allTasksCompleted }) => {
       // Check if this date is in our completedDates array
       const isCompleted = completedDates.some(completedDate => isSameDay(completedDate, date))
       
-      // Check if this is today and all tasks are completed
-      const isToday = isSameDay(date, new Date()) && allTasksCompleted
+      // Check if this is today and all tasks are completed (using optimistic state)
+      const isToday = isSameDay(date, new Date()) && (allTasksCompleted || optimisticTodayCompleted)
 
       if (isCompleted || isToday) {
         return (
