@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  const hideSidebarRoutes = ['/login', '/'];
+  const hideSidebarRoutes = ['/login', '/', '/register'];
   const hideSidebar = hideSidebarRoutes.includes(router.pathname);
 
   return (

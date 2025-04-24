@@ -97,7 +97,7 @@ const SideNav = ({ onToggleCollapse }) => {
     >
       <div className="flex justify-between items-center h-16 px-4 bg-rose-800 text-white">
         <h1 className={`${collapsed ? "hidden" : "block"} text-xl font-bold transition-opacity duration-300`}>
-          DiabetesTracker
+          Diabetes Decoded
         </h1>
         <button
           onClick={toggleSidebar}
