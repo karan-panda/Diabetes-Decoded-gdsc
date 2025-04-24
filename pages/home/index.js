@@ -27,6 +27,8 @@ import {
   FaBed,
   FaUtensils
 } from "react-icons/fa";
+import { db } from "@/lib/firebase";
+import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 
 export default function Home() {
 
@@ -75,6 +77,8 @@ export default function Home() {
   const [newTaskName, setNewTaskName] = useState("");
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [addTaskError, setAddTaskError] = useState("");
+  const [latestSteps, setLatestSteps] = useState(null);
+  const [stepsLoading, setStepsLoading] = useState(true);
 
   // Fetch tasks from Firebase
   useEffect(() => {
@@ -345,7 +349,9 @@ export default function Home() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-500 uppercase tracking-wider">Activity</p>
-                  <p className="text-2xl font-bold text-gray-800">6,240 steps</p>
+                  <p className="text-2xl font-bold text-gray-800">
+                    {stepsLoading ? "..." : latestSteps !== null ? `${latestSteps.toLocaleString()} steps` : "No data"}
+                  </p>
                   <p className="text-xs text-green-600 flex items-center mt-1">
                     <span className="inline-block mr-1">↑</span> 12% from yesterday
                   </p>
