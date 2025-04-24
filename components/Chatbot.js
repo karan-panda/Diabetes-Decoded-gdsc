@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect } from 'react';
 
 const ChatBot = () => {
@@ -19,12 +16,13 @@ const ChatBot = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      // Make sure to replace '<YOUR_SITE_URL>' and '<YOUR_SITE_NAME>' dynamically
+      const response = await fetch("/api/openrouter", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer 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`,
-          "HTTP-Referer": "<YOUR_SITE_URL>",
-          "X-Title": "<YOUR_SITE_NAME>",
+          "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "HTTP-Referer": process.env.NEXT_PUBLIC_SITE_URL,
+          "X-Title": process.env.NEXT_PUBLIC_SITE_NAME,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
