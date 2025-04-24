@@ -99,7 +99,7 @@ export default function Support() {
       {user && (
         <div className="mb-4 p-3 bg-blue-50 rounded-lg">
           <p className="text-sm text-gray-700">
-            You're submitting as: <span className="font-medium">{user.email}</span>
+            You&apos;re submitting as: <span className="font-medium">{user.email}</span>
           </p>
         </div>
       )}
