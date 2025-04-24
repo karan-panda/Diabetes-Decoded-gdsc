@@ -236,7 +236,7 @@ export default function ExpertHelp() {
               }
             ].map((testimonial, index) => (
               <div key={index} className="bg-white bg-opacity-10 p-6 rounded-xl backdrop-blur-sm">
-                <p className="italic mb-4">"{testimonial.quote}"</p>
+                <p className="italic mb-4">&quot;{testimonial.quote}&quot;</p>
                 <p className="font-semibold">{testimonial.name}</p>
                 <p className="text-blue-100 text-sm">{testimonial.result}</p>
               </div>
