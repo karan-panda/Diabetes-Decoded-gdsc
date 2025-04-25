@@ -258,11 +258,15 @@ function LandingPage() {
                 Start Now
               </button>
             </Link>
-            <Link href="/features">
+            <a
+              href="https://github.com/karan-panda/Diabetes-Decoded-gdsc"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <button className="px-8 py-3 bg-white hover:bg-gray-50 text-teal-600 border border-teal-600 rounded-full text-lg transition duration-300 flex items-center gap-2">
                 Learn More <ChevronDown className="w-5 h-5" />
               </button>
-            </Link>
+            </a>
           </div>
         </div>
 
