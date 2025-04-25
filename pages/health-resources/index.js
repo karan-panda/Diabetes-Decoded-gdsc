@@ -55,7 +55,7 @@ const HealthResourceCard = ({ title, description, imageUrl, link, logoAlt, categ
 };
 
 export default function HealthResources() {
-  const resources = React.useMemo(() => [
+  const resources = [
     {
       title: "American Heart Association",
       description: "Access diabetes management resources, heart-healthy recipes, and fitness tips specifically designed for people with diabetes to maintain cardiovascular health.",
@@ -128,7 +128,7 @@ export default function HealthResources() {
       logoAlt: "NIH Healthy Living Logo",
       category: "government"
     }
-  ], []);
+  ];
 
   // Resource categories for filtering
   const categories = [
@@ -148,7 +148,7 @@ export default function HealthResources() {
     } else {
       setFilteredResources(resources.filter(resource => resource.category === activeFilter));
     }
-  }, [activeFilter, resources]);
+  }, [activeFilter]);
 
   return (
     <div className="bg-gradient-to-b from-emerald-50 to-white min-h-screen">

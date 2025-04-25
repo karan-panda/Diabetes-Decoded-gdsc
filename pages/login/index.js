@@ -6,9 +6,6 @@ import { app } from "../../lib/firebase";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
-
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -19,12 +16,22 @@ export default function Login() {
   const [showGoogleModal, setShowGoogleModal] = useState(false);
   const [isLoginSuccessful, setIsLoginSuccessful] = useState(false);
   const [isGoogleLoginSuccessful, setIsGoogleLoginSuccessful] = useState(false);
+
+  // Initialize auth and provider only on client
+  let auth = null;
+  let googleProvider = null;
+  if (typeof window !== "undefined") {
+    auth = getAuth(app);
+    googleProvider = new GoogleAuthProvider();
+  }
+
   const handleClose = () => {
     setShow(false);
     setShowGoogleModal(false);
   };
 
   const handleLogin = () => {
+    if (!auth) return;
     signInWithEmailAndPassword(auth, email, password)
       .then((value) => {
         setMessage("User Logined successfully!🎉🎊");
@@ -43,6 +50,7 @@ export default function Login() {
   }
 
   const signupWithGoogle = () => {
+    if (!auth || !googleProvider) return;
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         const user = result.user;
