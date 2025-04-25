@@ -21,8 +21,6 @@ import { BiSolidFoodMenu } from "react-icons/bi"
 import { GiWeightScale } from "react-icons/gi"
 import { MdOutlineSecurity, MdOutlinePrivacyTip, MdConnectedTv } from "react-icons/md"
 
-const auth = getAuth(app)
-
 export default function Settings() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -46,19 +44,20 @@ export default function Settings() {
   })
 
   useEffect(() => {
-    const user = auth.currentUser
-    if (user) {
-      setEmail(user.email)
-      setName(user.displayName || "")
-    }
-
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (typeof window !== "undefined") {
+      const auth = getAuth(app);
+      const user = auth.currentUser;
       if (user) {
-        setName(user.displayName || "")
+        setEmail(user.email);
+        setName(user.displayName || "");
       }
-    })
-
-    return () => unsubscribe()
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setName(user.displayName || "");
+        }
+      });
+      return () => unsubscribe();
+    }
   }, [])
 
   const handleUpdate = async (e) => {

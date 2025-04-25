@@ -16,27 +16,24 @@ export default function Support() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [user, setUser] = useState(null);
 
-  // Initialize Firebase Auth
-  const auth = getAuth(app);
-
-  // Check auth state on component mount
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-        // Pre-fill form with user data if available
-        setFormData(prev => ({
-          ...prev,
-          email: user.email || "",
-          name: user.displayName || ""
-        }));
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [auth]);
+    if (typeof window !== "undefined") {
+      const auth = getAuth(app);
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setUser(user);
+          setFormData(prev => ({
+            ...prev,
+            email: user.email || "",
+            name: user.displayName || ""
+          }));
+        } else {
+          setUser(null);
+        }
+      });
+      return () => unsubscribe();
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

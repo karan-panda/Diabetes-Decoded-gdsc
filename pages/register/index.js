@@ -6,9 +6,6 @@ import { app } from "../../lib/firebase";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
-
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -23,7 +20,16 @@ export default function Register() {
   const handleShow = () => setShow(true);
   const router = useRouter();
 
+  // Initialize auth and provider only on client
+  let auth = null;
+  let googleProvider = null;
+  if (typeof window !== "undefined") {
+    auth = getAuth(app);
+    googleProvider = new GoogleAuthProvider();
+  }
+
   const signupUser = () => {
+    if (!auth) return;
     createUserWithEmailAndPassword(auth, email, password)
       .then(value => {
         setMessage("User Created successfully!🎉");
@@ -36,12 +42,14 @@ export default function Register() {
   }
 
   const signupWithGoogle = () => {
+    if (!auth || !googleProvider) return;
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         const user = result.user;
         setMessage("User Logined successfully!🎉 You can now go to the home page.");
         setShowGoogleModal(true);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         setMessage(error.message);
         setShow(true);
       });
