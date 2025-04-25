@@ -60,7 +60,7 @@ const SearchExercise = () => {
     <div className="flex flex-col items-center justify-center">
       <h3 className="text-xl font-semibold mb-6">Search for an exercise to get detailed information and images.</h3>
       <div className="w-full md:w-3/4 flex justify-center items-center">
-        <img src="https://img.freepik.com/free-vector/exercise-illustration_52683-41889.jpg" alt="Exercise" className="rounded-md max-w-xs mr-8" />
+        <img src="https://assets.clevelandclinic.org/transform/26568096-7fcc-4713-898d-ca1ed6c84895/exerciseHowOften-944015592-770x533-1_jpg" alt="Exercise" className="rounded-md max-w-xs mr-8" />
         <div>
           <h2 className="text-xl font-semibold mb-4">Finding the Right Exercise</h2>
           <p className="mb-4">Explore various exercises and find the ones that suit your fitness goals. From strength training to cardio, discover workouts that keep you motivated and fit.</p>
