@@ -121,7 +121,7 @@ const ExercisePlanPage = () => {
                 >
                   Diabetes Precautions
                 </button>
-                <button
+                {/* <button
                   onClick={() => setActiveTab("videos")}
                   className={`py-4 px-6 font-medium text-sm border-b-2 ${
                     activeTab === "videos"
@@ -130,7 +130,7 @@ const ExercisePlanPage = () => {
                   }`}
                 >
                   Video Tutorials
-                </button>
+                </button> */}
               </nav>
             </div>
 
@@ -369,7 +369,8 @@ const ExercisePlanPage = () => {
                 </div>
               )}
 
-              {activeTab === "videos" && (
+              {/* Commented out the entire video tutorial section */}
+              {/* {activeTab === "videos" && (
                 <div>
                   <h2 className="text-xl font-semibold mb-4 flex items-center">
                     <FaVideo className="text-blue-500 mr-2" /> Exercise Video Tutorials
@@ -495,7 +496,7 @@ const ExercisePlanPage = () => {
                     </div>
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
 
@@ -535,4 +536,3 @@ const ExercisePlanPage = () => {
 }
 
 export default ExercisePlanPage
-
