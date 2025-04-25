@@ -100,6 +100,14 @@ const Layout = () => {
     // Implementation for printing would go here
   }
 
+  // Google Fit disconnect handler
+  const handleDisconnectGoogleFit = async () => {
+    await fetch('/api/googlefit/disconnect', { method: 'POST' });
+    setIsGoogleFitConnected(false);
+    setGoogleFitData({ steps: [], heartRate: [], bloodPressure: [], calories: [] });
+    setGoogleFitError(null);
+  };
+
   // Prepare data for BarGraph (steps) - keep existing
   const stepChartData = {
     labels: googleFitData?.steps?.map(day => new Date(day.startTimeMillis).toLocaleDateString('en-US', { weekday: 'short' })) || [],
@@ -157,7 +165,7 @@ const Layout = () => {
     labels: googleFitData.calories?.map(day => new Date(day.startTimeMillis).toLocaleDateString('en-US', { weekday: 'short' })) || [],
     datasets: [
       {
-        label: 'Calories Burned (kcal)',
+        label: 'Calories Trend Analysis (kcal)',
         data: googleFitData.calories?.map(day => day.calories) || [],
         fill: false,
         borderColor: 'rgb(34, 197, 94)', // Green color
@@ -289,21 +297,20 @@ const Layout = () => {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 bg-white p-6 rounded-lg shadow-sm">
           <h2 className="text-xl font-bold mb-4">Glucose Trends</h2>
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <span className="text-sm font-medium text-gray-500">Average</span>
-              <div className="text-2xl font-bold">124 mg/dL</div>
-            </div>
-            <div>
-              <span className="text-sm font-medium text-gray-500">Highest</span>
-              <div className="text-2xl font-bold text-red-500">182 mg/dL</div>
-            </div>
-            <div>
-              <span className="text-sm font-medium text-gray-500">Lowest</span>
-              <div className="text-2xl font-bold text-green-500">98 mg/dL</div>
-            </div>
-          </div>
-          <LineGraph />
+          {/* DEMO DATA FOR GLUCOSE TRENDS */}
+          <LineGraph chartData={{
+            labels: ["Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23", "Apr 24", "Apr 25"],
+            datasets: [
+              {
+                label: "Glucose (mg/dL)",
+                data: [110, 120, 130, 125, 140, 135, 128],
+                fill: false,
+                borderColor: "rgb(34, 197, 94)",
+                backgroundColor: "rgba(34, 197, 94, 0.2)",
+                tension: 0.1,
+              }
+            ]
+          }} yAxisLabel="Glucose (mg/dL)" />
           <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-green-50 p-4 rounded-lg">
               <div className="flex items-center">
@@ -892,6 +899,15 @@ const Layout = () => {
           </>
         )}
       </div>
+      {/* Add Disconnect button if connected */}
+      {isGoogleFitConnected && (
+        <button
+          onClick={handleDisconnectGoogleFit}
+          className="flex items-center px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 mt-2"
+        >
+          Disconnect Google Fit
+        </button>
+      )}
     </div>
   )
 }

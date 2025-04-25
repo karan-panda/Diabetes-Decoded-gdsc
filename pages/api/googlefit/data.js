@@ -148,26 +148,54 @@ export default async function handler(req, res) {
     let stepsData = [];
     try {
         const stepSourceId = await findDataSource(oauth2Client, 'com.google.step_count.delta');
+        let stepBuckets = [];
         if (stepSourceId) {
-          const stepBuckets = await aggregateData(oauth2Client, stepSourceId, 'com.google.step_count.delta', startTimeMillis, endTimeMillis, dailyBucketMillis);
-          stepsData = stepBuckets.map(bucket => {
-              return {
-                  startTimeMillis: parseInt(bucket.startTimeMillis, 10),
-                  endTimeMillis: parseInt(bucket.endTimeMillis, 10),
-                  steps: bucket.value,
-              };
-          }).filter(bucket => bucket.steps > 0);
+          stepBuckets = await aggregateData(oauth2Client, stepSourceId, 'com.google.step_count.delta', startTimeMillis, endTimeMillis, dailyBucketMillis);
         } else {
-          // Try to aggregate by data type name if no source found
-          const stepBuckets = await aggregateData(oauth2Client, null, 'com.google.step_count.delta', startTimeMillis, endTimeMillis, dailyBucketMillis);
-          stepsData = stepBuckets.map(bucket => {
-              return {
-                  startTimeMillis: parseInt(bucket.startTimeMillis, 10),
-                  endTimeMillis: parseInt(bucket.endTimeMillis, 10),
-                  steps: bucket.value,
-              };
-          }).filter(bucket => bucket.steps > 0);
+          stepBuckets = await aggregateData(oauth2Client, null, 'com.google.step_count.delta', startTimeMillis, endTimeMillis, dailyBucketMillis);
         }
+        // Log the date range for debugging
+        console.log('Google Fit steps fetch:');
+        console.log('  startTime (ms):', startTimeMillis, '->', new Date(startTimeMillis).toISOString());
+        console.log('  endTime   (ms):', endTimeMillis, '->', new Date(endTimeMillis).toISOString());
+        // Map buckets to a date-keyed object for easy lookup
+        const bucketMap = {};
+        stepBuckets.forEach(bucket => {
+          const dateKey = new Date(bucket.startTimeMillis).toISOString().split('T')[0];
+          bucketMap[dateKey] = bucket.value;
+        });
+        // Fill last 7 days, even if missing, and check Firestore if steps is 0
+        stepsData = [];
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date(now);
+          d.setDate(now.getDate() - i);
+          d.setHours(0, 0, 0, 0);
+          const dateKey = d.toISOString().split('T')[0];
+          let steps = bucketMap[dateKey] || 0;
+          if (steps === 0 && userId) {
+            // Check Firestore for manual entry
+            const q = query(
+              collection(db, 'healthDataHistory'),
+              where('userId', '==', userId),
+              where('dataType', '==', 'steps'),
+              where('date', '==', dateKey)
+            );
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+              const doc = querySnapshot.docs[0].data();
+              if (doc.value && typeof doc.value === 'number') {
+                steps = doc.value;
+              }
+            }
+          }
+          stepsData.push({
+            startTimeMillis: d.getTime(),
+            endTimeMillis: d.getTime() + dailyBucketMillis - 1,
+            steps
+          });
+        }
+        // Log the filled stepsData for debugging
+        console.log('stepsData (last 7 days):', stepsData.map(s => ({ date: new Date(s.startTimeMillis).toISOString().split('T')[0], steps: s.steps })));
     } catch (error) {
         console.warn("Could not fetch step data:", error.message);
     }
@@ -330,42 +358,51 @@ export default async function handler(req, res) {
     try {
         console.log("Fetching calories expended data...");
         const caloriesSourceId = await findDataSource(oauth2Client, 'com.google.calories.expended');
+        let caloriesBuckets = [];
         if (caloriesSourceId) {
-          const caloriesBuckets = await aggregateData(oauth2Client, caloriesSourceId, 'com.google.calories.expended', startTimeMillis, endTimeMillis, dailyBucketMillis);
-          caloriesData = caloriesBuckets.map(bucket => {
-              return {
-                  startTimeMillis: parseInt(bucket.startTimeMillis, 10),
-                  endTimeMillis: parseInt(bucket.endTimeMillis, 10),
-                  calories: bucket.value,
-                  date: new Date(bucket.startTimeMillis).toISOString().split('T')[0]
-              };
-          }).filter(bucket => bucket.calories !== null && bucket.calories > 0);
+          caloriesBuckets = await aggregateData(oauth2Client, caloriesSourceId, 'com.google.calories.expended', startTimeMillis, endTimeMillis, dailyBucketMillis);
         } else {
-          // Try to aggregate by data type name if no source found
-          const caloriesBuckets = await aggregateData(oauth2Client, null, 'com.google.calories.expended', startTimeMillis, endTimeMillis, dailyBucketMillis);
-          caloriesData = caloriesBuckets.map(bucket => {
-              return {
-                  startTimeMillis: parseInt(bucket.startTimeMillis, 10),
-                  endTimeMillis: parseInt(bucket.endTimeMillis, 10),
-                  calories: bucket.value,
-                  date: new Date(bucket.startTimeMillis).toISOString().split('T')[0]
-              };
-          }).filter(bucket => bucket.calories !== null && bucket.calories > 0);
+          caloriesBuckets = await aggregateData(oauth2Client, null, 'com.google.calories.expended', startTimeMillis, endTimeMillis, dailyBucketMillis);
         }
-        
-        // If we got calories data, log the details
-        if (caloriesData.length > 0) {
-            console.log("\n===== CALORIES DATA DETAILS =====");
-            caloriesData.forEach((reading, index) => {
-                const date = new Date(reading.startTimeMillis);
-                console.log(`Reading #${index + 1}: ${date.toLocaleString()} - Calories: ${reading.calories} kcal`);
-            });
-            console.log("===================================\n");
-        } else {
-            console.log("\n===== NO CALORIES DATA FOUND =====");
-            console.log("Please ensure you have added calories/activity data to Google Fit");
-            console.log("===================================\n");
+        // Map buckets to a date-keyed object for easy lookup
+        const bucketMap = {};
+        caloriesBuckets.forEach(bucket => {
+          const dateKey = new Date(bucket.startTimeMillis).toISOString().split('T')[0];
+          bucketMap[dateKey] = bucket.value;
+        });
+        // Fill last 7 days, even if missing, and check Firestore if calories is 0
+        caloriesData = [];
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date(now);
+          d.setDate(now.getDate() - i);
+          d.setHours(0, 0, 0, 0);
+          const dateKey = d.toISOString().split('T')[0];
+          let calories = bucketMap[dateKey] || 0;
+          if (calories === 0 && userId) {
+            // Check Firestore for manual entry
+            const q = query(
+              collection(db, 'healthDataHistory'),
+              where('userId', '==', userId),
+              where('dataType', '==', 'calories'),
+              where('date', '==', dateKey)
+            );
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+              const doc = querySnapshot.docs[0].data();
+              if (doc.value && typeof doc.value === 'number') {
+                calories = doc.value;
+              }
+            }
+          }
+          caloriesData.push({
+            startTimeMillis: d.getTime(),
+            endTimeMillis: d.getTime() + dailyBucketMillis - 1,
+            calories,
+            date: dateKey
+          });
         }
+        // Log the filled caloriesData for debugging
+        console.log('caloriesData (last 7 days):', caloriesData.map(s => ({ date: s.date, calories: s.calories })));
     } catch (error) {
          console.warn("Could not fetch calories data:", error.message);
          console.log("Error details:", error.response?.data || error);

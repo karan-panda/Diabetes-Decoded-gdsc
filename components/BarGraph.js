@@ -2,8 +2,6 @@
 
 import { useRef, useEffect, useState } from "react"
 import Chart from "chart.js/auto"
-import { collection, getDocs, query, orderBy, limit } from "firebase/firestore"
-import { db } from "../lib/firebase"
 import { FaRunning, FaBurn, FaArrowUp, FaArrowDown } from "react-icons/fa"
 
 const BarGraph = () => {
@@ -15,51 +13,39 @@ const BarGraph = () => {
   const [weeklyChange, setWeeklyChange] = useState(0)
 
   useEffect(() => {
-    const fetchstepData = async () => {
+    const fetchGoogleFitSteps = async () => {
       setIsLoading(true)
       try {
-        const q = query(collection(db, "stepData"), orderBy("timestamp", "desc"), limit(14))
-        const querySnapshot = await getDocs(q)
-        const fetchedstepData = []
-        const fetchedLabels = []
-        let stepsSum = 0
-
-        querySnapshot.forEach((doc) => {
-          const data = doc.data()
-          if (data.Steps && data.timestamp) {
-            const date = new Date(data.timestamp.seconds * 1000)
-            fetchedLabels.push(date.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }))
-            fetchedstepData.push(data.Steps)
-          } else {
-            console.warn("Document missing required fields:", doc.id)
-          }
+        const response = await fetch("/api/googlefit/data")
+        if (!response.ok) throw new Error("Failed to fetch Google Fit data")
+        const data = await response.json()
+        const stepsArray = data.steps || []
+        // Sort by startTimeMillis descending (most recent first)
+        const sortedSteps = [...stepsArray].sort((a, b) => b.startTimeMillis - a.startTimeMillis)
+        // Take last 7 days
+        const last7 = sortedSteps.slice(0, 7)
+        const fetchedstepData = last7.map(day => day.steps)
+        const fetchedLabels = last7.map(day => {
+          const date = new Date(day.startTimeMillis)
+          return date.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" })
         })
-
-        // Only sum the last 7 days for totalSteps
-        const last7Steps = fetchedstepData.slice(0, 7)
-        stepsSum = last7Steps.reduce((sum, steps) => sum + steps, 0)
-
-        // Calculate weekly change
-        const currentWeekTotal = last7Steps.reduce((sum, steps) => sum + steps, 0)
-        const previousWeekTotal = fetchedstepData.slice(7, 14).reduce((sum, steps) => sum + steps, 0)
-
-        if (previousWeekTotal > 0) {
-          const percentChange = ((currentWeekTotal - previousWeekTotal) / previousWeekTotal) * 100
-          setWeeklyChange(percentChange)
+        const stepsSum = fetchedstepData.reduce((sum, steps) => sum + steps, 0)
+        // Calculate weekly change (compare previous 7 days if available)
+        const prev7 = sortedSteps.slice(7, 14).map(day => day.steps)
+        const prevSum = prev7.reduce((sum, steps) => sum + steps, 0)
+        if (prevSum > 0) {
+          setWeeklyChange(((stepsSum - prevSum) / prevSum) * 100)
         }
-
-        // Reverse arrays to show chronological order
-        setstepData(last7Steps.reverse())
-        setLabels(fetchedLabels.slice(0, 7).reverse())
+        setstepData(fetchedstepData.reverse())
+        setLabels(fetchedLabels.reverse())
         setTotalSteps(stepsSum)
         setIsLoading(false)
       } catch (error) {
-        console.error("Error fetching steps data:", error)
+        console.error("Error fetching Google Fit steps:", error)
         setIsLoading(false)
       }
     }
-
-    fetchstepData()
+    fetchGoogleFitSteps()
   }, [])
 
   useEffect(() => {
