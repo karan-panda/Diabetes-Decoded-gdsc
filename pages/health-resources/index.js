@@ -55,7 +55,7 @@ const HealthResourceCard = ({ title, description, imageUrl, link, logoAlt, categ
 };
 
 export default function HealthResources() {
-  const resources = [
+  const resources = React.useMemo(() => [
     {
       title: "American Heart Association",
       description: "Access diabetes management resources, heart-healthy recipes, and fitness tips specifically designed for people with diabetes to maintain cardiovascular health.",
@@ -128,7 +128,7 @@ export default function HealthResources() {
       logoAlt: "NIH Healthy Living Logo",
       category: "government"
     }
-  ];
+  ], []);
 
   // Resource categories for filtering
   const categories = [
