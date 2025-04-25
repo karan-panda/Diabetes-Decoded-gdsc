@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
+import Link from 'next/link';
 import LineGraph from "../../components/LineGraph"
 import ChatBot from "../../components/Chatbot"
 import BarGraph from "../../components/BarGraph"
@@ -11,20 +12,78 @@ import {
 import { TbCalendarStats } from "react-icons/tb"
 import { GiMedicinePills } from "react-icons/gi"
 import { MdTrendingUp, MdTrendingDown, MdOutlineWaterDrop } from "react-icons/md"
+import { FcGoogle } from 'react-icons/fc';
 
 const Layout = () => {
   const [activeTab, setActiveTab] = useState("overview")
   const [timeRange, setTimeRange] = useState("week")
   const [showChatbot, setShowChatbot] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
+  const [googleFitData, setGoogleFitData] = useState({
+    steps: [],
+    heartRate: [],
+    bloodPressure: [],
+    calories: []
+  });
+  const [isGoogleFitConnected, setIsGoogleFitConnected] = useState(false); // State for connection status
+  const [googleFitError, setGoogleFitError] = useState(null); // State for errors
+  const [isFetchingFitData, setIsFetchingFitData] = useState(true); // Separate loading state for Fit data
 
   useEffect(() => {
-    // Simulate data loading
+    // Simulate initial page loading
     const timer = setTimeout(() => {
       setIsLoading(false)
-    }, 1000)
+    }, 500)
+
+    // Fetch Google Fit data
+    const fetchGoogleFitData = async () => {
+      setIsFetchingFitData(true);
+      setGoogleFitError(null);
+      try {
+        const response = await fetch('/api/googlefit/data');
+        if (response.ok) {
+          const data = await response.json();
+          setGoogleFitData({
+            steps: data.steps || [],
+            heartRate: data.heartRate || [],
+            bloodPressure: data.bloodPressure || [],
+            calories: data.calories || []
+          });
+          setIsGoogleFitConnected(true);
+        } else if (response.status === 401) {
+          // Not authorized or token expired
+          setIsGoogleFitConnected(false);
+          setGoogleFitData({
+            steps: [],
+            heartRate: [],
+            bloodPressure: [],
+            calories: []
+          }); // Clear all data
+          // Optionally set an error message, but often just showing the connect button is enough
+          // setGoogleFitError("Please connect to Google Fit.");
+        } else {
+          // Other server errors
+          throw new Error(`Failed to fetch data: ${response.statusText}`);
+        }
+      } catch (error) {
+        console.error("Error fetching Google Fit data:", error);
+        setIsGoogleFitConnected(false);
+        setGoogleFitData({
+          steps: [],
+          heartRate: [],
+          bloodPressure: [],
+          calories: []
+        }); // Clear all data
+        setGoogleFitError(error.message || "Could not connect to Google Fit service.");
+      } finally {
+        setIsFetchingFitData(false);
+      }
+    };
+
+    fetchGoogleFitData();
+
     return () => clearTimeout(timer)
-  }, [])
+  }, []) // Run once on mount
 
   const handleExportData = () => {
     alert("Exporting data report as PDF...")
@@ -41,23 +100,196 @@ const Layout = () => {
     // Implementation for printing would go here
   }
 
-  // Sample data for different tabs
+  // Google Fit disconnect handler
+  const handleDisconnectGoogleFit = async () => {
+    await fetch('/api/googlefit/disconnect', { method: 'POST' });
+    setIsGoogleFitConnected(false);
+    setGoogleFitData({ steps: [], heartRate: [], bloodPressure: [], calories: [] });
+    setGoogleFitError(null);
+  };
+
+  // Prepare data for BarGraph (steps) - keep existing
+  const stepChartData = {
+    labels: googleFitData?.steps?.map(day => new Date(day.startTimeMillis).toLocaleDateString('en-US', { weekday: 'short' })) || [],
+    datasets: [
+      {
+        label: 'Steps per Day',
+        data: googleFitData?.steps?.map(day => day.steps) || [],
+        backgroundColor: 'rgba(59, 130, 246, 0.5)', // Example color
+        borderColor: 'rgba(59, 130, 246, 1)',
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  // Prepare data for LineGraph (heart rate)
+  const heartRateChartData = {
+    labels: googleFitData.heartRate.map(day => new Date(day.startTimeMillis).toLocaleDateString('en-US', { weekday: 'short' })),
+    datasets: [
+      {
+        label: 'Average Heart Rate (bpm)',
+        data: googleFitData.heartRate.map(day => day.averageBpm),
+        fill: false,
+        borderColor: 'rgb(239, 68, 68)', // Red color
+        tension: 0.1,
+      }
+    ],
+  };
+
+  // Prepare data for LineGraph (blood pressure)
+  const bloodPressureChartData = {
+    labels: googleFitData.bloodPressure.map(point => 
+      new Date(point.startTimeMillis).toLocaleDateString('en-US', 
+        { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })
+    ),
+    datasets: [
+      {
+        label: 'Systolic (mmHg)',
+        data: googleFitData.bloodPressure.map(point => point.systolic),
+        fill: false,
+        borderColor: 'rgb(239, 68, 68)', // Red for systolic
+        tension: 0.1,
+      },
+      {
+        label: 'Diastolic (mmHg)',
+        data: googleFitData.bloodPressure.map(point => point.diastolic),
+        fill: false,
+        borderColor: 'rgb(59, 130, 246)', // Blue for diastolic
+        tension: 0.1,
+      }
+    ],
+  };
+
+  // Prepare data for LineGraph (calories)
+  const caloriesChartData = {
+    labels: googleFitData.calories?.map(day => new Date(day.startTimeMillis).toLocaleDateString('en-US', { weekday: 'short' })) || [],
+    datasets: [
+      {
+        label: 'Calories Trend Analysis (kcal)',
+        data: googleFitData.calories?.map(day => day.calories) || [],
+        fill: false,
+        borderColor: 'rgb(34, 197, 94)', // Green color
+        backgroundColor: 'rgba(34, 197, 94, 0.2)',
+        tension: 0.1,
+      }
+    ],
+  };
+
+  // Sample data for different tabs (keep existing structure)
   const tabContent = {
     overview: (
-      <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
-        <div className="xl:col-span-3 bg-white p-6 rounded-lg shadow-sm">
+      <div className="grid grid-cols-1 xl:grid-cols-1 gap-6">
+        {/* Blood Pressure Line Graph */}
+        <div className="bg-white p-6 rounded-lg shadow-sm">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">Glucose Monitoring</h2>
+            <h2 className="text-xl font-bold">Blood Pressure Monitoring</h2>
             <div className="flex space-x-2">
               <button className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">Daily</button>
               <button className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">Weekly</button>
               <button className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">Monthly</button>
             </div>
           </div>
-          <LineGraph />
+          {isFetchingFitData && <p>Loading Google Fit data...</p>}
+          {googleFitError && <p className="text-red-500">Error: {googleFitError}</p>}
+          {!isFetchingFitData && !googleFitError && isGoogleFitConnected && googleFitData.bloodPressure.length > 0 && (
+            <LineGraph chartData={bloodPressureChartData} yAxisLabel="mmHg" />
+          )}
+          {!isFetchingFitData && !isGoogleFitConnected && (
+            <div className="text-center p-4 border border-dashed rounded-md">
+              <p className="text-gray-500 mb-2">Connect to Google Fit to see your blood pressure data.</p>
+              <Link href="/api/googlefit/connect" legacyBehavior>
+                <a className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200">
+                  <FcGoogle className="mr-2" /> Connect Google Fit
+                </a>
+              </Link>
+            </div>
+          )}
+          {!isFetchingFitData && isGoogleFitConnected && googleFitData.bloodPressure.length === 0 && (
+            <p className="text-gray-500">Blood pressure data not available from Google Fit. You may need to add readings manually in the Google Fit app or connect a compatible blood pressure monitor.</p>
+          )}
         </div>
-        <div className="xl:col-span-2 bg-white p-6 rounded-lg shadow-sm">
-          <BarGraph />
+
+        {/* Heart Rate Line Graph */}
+        <div className="bg-white p-6 rounded-lg shadow-sm">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold">Heart Rate Monitoring</h2>
+            <div className="flex space-x-2">
+              <button className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">Daily</button>
+              <button className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">Weekly</button>
+              <button className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">Monthly</button>
+            </div>
+          </div>
+          {isFetchingFitData && <p>Loading Google Fit data...</p>}
+          {googleFitError && <p className="text-red-500">Error: {googleFitError}</p>}
+          {!isFetchingFitData && !googleFitError && isGoogleFitConnected && googleFitData.heartRate.length > 0 && (
+            <LineGraph chartData={heartRateChartData} yAxisLabel="BPM" />
+          )}
+          {!isFetchingFitData && !isGoogleFitConnected && (
+            <div className="text-center p-4 border border-dashed rounded-md">
+              <p className="text-gray-500 mb-2">Connect to Google Fit to see your heart rate data.</p>
+              <Link href="/api/googlefit/connect" legacyBehavior>
+                <a className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200">
+                  <FcGoogle className="mr-2" /> Connect Google Fit
+                </a>
+              </Link>
+            </div>
+          )}
+          {!isFetchingFitData && isGoogleFitConnected && googleFitData.heartRate.length === 0 && (
+            <p className="text-gray-500">Heart rate data not available from Google Fit. You may need to connect a compatible heart rate monitor or fitness tracker.</p>
+          )}
+        </div>
+
+        {/* Calories Line Graph - NEW */}
+        <div className="bg-white p-6 rounded-lg shadow-sm">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold">Calories Burned</h2>
+            <div className="flex space-x-2">
+              <button className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">Daily</button>
+              <button className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">Weekly</button>
+              <button className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">Monthly</button>
+            </div>
+          </div>
+          {isFetchingFitData && <p>Loading Google Fit data...</p>}
+          {googleFitError && <p className="text-red-500">Error: {googleFitError}</p>}
+          {!isFetchingFitData && !googleFitError && isGoogleFitConnected && googleFitData.calories && googleFitData.calories.length > 0 && (
+            <LineGraph chartData={caloriesChartData} yAxisLabel="Calories (kcal)" />
+          )}
+          {!isFetchingFitData && !isGoogleFitConnected && (
+            <div className="text-center p-4 border border-dashed rounded-md">
+              <p className="text-gray-500 mb-2">Connect to Google Fit to see your calories data.</p>
+              <Link href="/api/googlefit/connect" legacyBehavior>
+                <a className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200">
+                  <FcGoogle className="mr-2" /> Connect Google Fit
+                </a>
+              </Link>
+            </div>
+          )}
+          {!isFetchingFitData && isGoogleFitConnected && (!googleFitData.calories || googleFitData.calories.length === 0) && (
+            <p className="text-gray-500">Calories data not available from Google Fit. You may need to log workouts or connect a fitness tracker.</p>
+          )}
+        </div>
+
+        {/* Steps Bar Graph */}
+        <div className="bg-white p-6 rounded-lg shadow-sm">
+          <h2 className="text-xl font-bold mb-4">Activity Overview (Steps)</h2>
+          {isFetchingFitData && <p>Loading Google Fit data...</p>}
+          {googleFitError && <p className="text-red-500">Error: {googleFitError}</p>}
+          {!isFetchingFitData && !googleFitError && isGoogleFitConnected && googleFitData.steps.length > 0 && (
+            <BarGraph chartData={stepChartData} />
+          )}
+          {!isFetchingFitData && !isGoogleFitConnected && (
+            <div className="text-center p-4 border border-dashed rounded-md">
+              <p className="text-gray-500 mb-2">Connect to Google Fit to see your step data.</p>
+              <Link href="/api/googlefit/connect" legacyBehavior>
+                <a className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200">
+                  <FcGoogle className="mr-2" /> Connect Google Fit
+                </a>
+              </Link>
+            </div>
+          )}
+          {!isFetchingFitData && isGoogleFitConnected && googleFitData.steps.length === 0 && (
+            <p className="text-gray-500">Step data not available from Google Fit.</p>
+          )}
         </div>
       </div>
     ),
@@ -65,21 +297,20 @@ const Layout = () => {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 bg-white p-6 rounded-lg shadow-sm">
           <h2 className="text-xl font-bold mb-4">Glucose Trends</h2>
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <span className="text-sm font-medium text-gray-500">Average</span>
-              <div className="text-2xl font-bold">124 mg/dL</div>
-            </div>
-            <div>
-              <span className="text-sm font-medium text-gray-500">Highest</span>
-              <div className="text-2xl font-bold text-red-500">182 mg/dL</div>
-            </div>
-            <div>
-              <span className="text-sm font-medium text-gray-500">Lowest</span>
-              <div className="text-2xl font-bold text-green-500">98 mg/dL</div>
-            </div>
-          </div>
-          <LineGraph />
+          {/* DEMO DATA FOR GLUCOSE TRENDS */}
+          <LineGraph chartData={{
+            labels: ["Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23", "Apr 24", "Apr 25"],
+            datasets: [
+              {
+                label: "Glucose (mg/dL)",
+                data: [110, 120, 130, 125, 140, 135, 128],
+                fill: false,
+                borderColor: "rgb(34, 197, 94)",
+                backgroundColor: "rgba(34, 197, 94, 0.2)",
+                tension: 0.1,
+              }
+            ]
+          }} yAxisLabel="Glucose (mg/dL)" />
           <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-green-50 p-4 rounded-lg">
               <div className="flex items-center">
@@ -166,7 +397,7 @@ const Layout = () => {
     activity: (
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 bg-white p-6 rounded-lg shadow-sm">
-          <h2 className="text-xl font-bold mb-4">Physical Activity</h2>
+          <h2 className="text-xl font-bold mb-4">Physical Activity (Steps)</h2>
           <div className="flex justify-between items-center mb-4">
             <div>
               <span className="text-sm font-medium text-gray-500">Weekly Goal</span>
@@ -184,7 +415,46 @@ const Layout = () => {
           <div className="w-full bg-gray-200 rounded-full h-4 mb-6">
             <div className="bg-blue-500 h-4 rounded-full" style={{ width: "80%" }}></div>
           </div>
-          <BarGraph />
+          {/* Steps Bar Graph */}
+          {isFetchingFitData && <p>Loading Google Fit data...</p>}
+          {googleFitError && <p className="text-red-500">Error: {googleFitError}</p>}
+          {!isFetchingFitData && !googleFitError && isGoogleFitConnected && googleFitData.steps && googleFitData.steps.length > 0 && (
+            <BarGraph chartData={stepChartData} />
+          )}
+          {!isFetchingFitData && !isGoogleFitConnected && (
+             <div className="text-center p-4 border border-dashed rounded-md">
+                <p className="text-gray-500 mb-2">Connect to Google Fit to see your step data.</p>
+                <Link href="/api/googlefit/connect" legacyBehavior>
+                    <a className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200">
+                        <FcGoogle className="mr-2" /> Connect Google Fit
+                    </a>
+                </Link>
+             </div>
+           )}
+           {!isFetchingFitData && isGoogleFitConnected && (!googleFitData.steps || googleFitData.steps.length === 0) && (
+              <p className="text-gray-500">Step data not available from Google Fit.</p>
+          )}
+
+          {/* Calories Line Graph - NEW in Activity tab */}
+          <h2 className="text-xl font-bold mb-4 mt-8">Calories Burned</h2>
+          {isFetchingFitData && <p>Loading Google Fit data...</p>}
+          {googleFitError && <p className="text-red-500">Error: {googleFitError}</p>}
+          {!isFetchingFitData && !googleFitError && isGoogleFitConnected && googleFitData.calories && googleFitData.calories.length > 0 && (
+            <LineGraph chartData={caloriesChartData} yAxisLabel="Calories (kcal)" />
+          )}
+          {!isFetchingFitData && !isGoogleFitConnected && (
+            <div className="text-center p-4 border border-dashed rounded-md">
+              <p className="text-gray-500 mb-2">Connect to Google Fit to see your calories data.</p>
+              <Link href="/api/googlefit/connect" legacyBehavior>
+                <a className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200">
+                  <FcGoogle className="mr-2" /> Connect Google Fit
+                </a>
+              </Link>
+            </div>
+          )}
+          {!isFetchingFitData && isGoogleFitConnected && (!googleFitData.calories || googleFitData.calories.length === 0) && (
+            <p className="text-gray-500">Calories data not available from Google Fit. Add workouts to see energy expenditure.</p>
+          )}
         </div>
         <div className="bg-white p-6 rounded-lg shadow-sm">
           <h2 className="text-xl font-bold mb-4">Activity Log</h2>
@@ -286,39 +556,39 @@ const Layout = () => {
                 </button>
               </div>
             </div>
-            <div className="bg-red-50 p-4 rounded-lg">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <FaBell className="text-red-500 mr-2" />
-                  <div>
-                    <p className="font-medium">Glipizide 5mg</p>
-                    <p className="text-sm text-gray-600">Overdue by 2 hours</p>
-                  </div>
+          </div>
+          <div className="bg-red-50 p-4 rounded-lg">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <FaBell className="text-red-500 mr-2" />
+                <div>
+                  <p className="font-medium">Glipizide 5mg</p>
+                  <p className="text-sm text-gray-600">Overdue by 2 hours</p>
                 </div>
-                <button className="bg-white text-red-500 px-3 py-1 rounded-md border border-red-500 text-sm">
-                  Take Now
-                </button>
               </div>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <FaBell className="text-gray-400 mr-2" />
-                  <div>
-                    <p className="font-medium">Insulin</p>
-                    <p className="text-sm text-gray-600">Due before dinner</p>
-                  </div>
-                </div>
-                <button className="bg-white text-gray-500 px-3 py-1 rounded-md border border-gray-500 text-sm">
-                  Remind
-                </button>
-              </div>
+              <button className="bg-white text-red-500 px-3 py-1 rounded-md border border-red-500 text-sm">
+                Take Now
+              </button>
             </div>
           </div>
-          <button className="w-full mt-4 bg-blue-50 text-blue-700 py-2 rounded-lg hover:bg-blue-100">
-            Add Medication
-          </button>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <FaBell className="text-gray-400 mr-2" />
+                <div>
+                  <p className="font-medium">Insulin</p>
+                  <p className="text-sm text-gray-600">Due before dinner</p>
+                </div>
+              </div>
+              <button className="bg-white text-gray-500 px-3 py-1 rounded-md border border-gray-500 text-sm">
+                Remind
+              </button>
+            </div>
+          </div>
         </div>
+        <button className="w-full mt-4 bg-blue-50 text-blue-700 py-2 rounded-lg hover:bg-blue-100">
+          Add Medication
+        </button>
       </div>
     ),
     reports: (
@@ -424,29 +694,56 @@ const Layout = () => {
                 <div>
                   <h1 className="text-3xl font-bold mb-2">Health Analytics Dashboard</h1>
                   <p className="text-gray-600">Track your diabetes metrics and stay informed about your health progress</p>
+                  
+                  {/* Connection status indicators */}
+                  {!isFetchingFitData && isGoogleFitConnected && (
+                    <span className="text-sm text-green-600 flex items-center mt-1">
+                      <FcGoogle className="mr-1" /> Connected to Google Fit
+                    </span>
+                  )}
+                  {!isFetchingFitData && !isGoogleFitConnected && !googleFitError && (
+                    <span className="text-sm text-gray-500 flex items-center mt-1">
+                      Connect to Google Fit for more insights.
+                    </span>
+                  )}
+                  {!isFetchingFitData && googleFitError && (
+                    <span className="text-sm text-red-500 flex items-center mt-1">
+                      Google Fit connection issue.
+                    </span>
+                  )}
                 </div>
+                
                 <div className="flex mt-4 md:mt-0 space-x-3">
+                  {/* Connect Button - show only if not connected */}
+                  {!isFetchingFitData && !isGoogleFitConnected && (
+                     <Link href="/api/googlefit/connect" legacyBehavior>
+                        <a className="flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200">
+                            <FcGoogle className="mr-2" /> Connect Google Fit
+                        </a>
+                    </Link>
+                  )}
+                  
+                  {/* Other buttons */}
                   <button
-                    onClick={handleExportData}
-                    className="flex items-center px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100"
-                  >
-                    <FaDownload className="mr-2" /> Export
-                  </button>
-                  <button
-                    onClick={handleShareData}
-                    className="flex items-center px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100"
-                  >
-                    <FaShareAlt className="mr-2" /> Share
-                  </button>
-                  <button
+                     onClick={handleExportData}
+                     className="flex items-center px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100"
+                   >
+                     <FaDownload className="mr-2" /> Export
+                   </button>
+                   <button
+                     onClick={handleShareData}
+                     className="flex items-center px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100"
+                   >
+                     <FaShareAlt className="mr-2" /> Share
+                   </button>
+                   <button
                     onClick={() => setShowChatbot(!showChatbot)}
                     className="flex items-center px-4 py-2 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100"
-                  >
+                   >
                     {showChatbot ? "Hide Assistant" : "Show Assistant"}
-                  </button>
+                   </button>
                 </div>
               </div>
-
 
               {/* Time Range Selector */}
               <div className="flex items-center mb-6">
@@ -476,7 +773,7 @@ const Layout = () => {
 
               {/* Dashboard Tabs */}
               <div className="flex flex-wrap border-b mb-6 overflow-x-auto">
-                {[
+                {[ 
                   { id: "overview", label: "Overview", icon: <FaChartArea /> },
                   { id: "glucose", label: "Glucose Trends", icon: <FaChartLine /> },
                   { id: "activity", label: "Activity", icon: <FaChartBar /> },
@@ -499,6 +796,7 @@ const Layout = () => {
             </div>
 
             {/* Main Content Area - Dynamic based on active tab */}
+            {/* Pass data down to the relevant tab content */}
             {tabContent[activeTab]}
 
             {/* Additional Analytics Sections */}
@@ -601,8 +899,16 @@ const Layout = () => {
           </>
         )}
       </div>
+      {/* Add Disconnect button if connected */}
+      {isGoogleFitConnected && (
+        <button
+          onClick={handleDisconnectGoogleFit}
+          className="flex items-center px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 mt-2"
+        >
+          Disconnect Google Fit
+        </button>
+      )}
     </div>
-
   )
 }
 
