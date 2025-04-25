@@ -11,11 +11,6 @@
 Welcome to **Diabetes Decoded**, your all-in-one solution for diabetes management and monitoring. Our platform integrates precise machine learning models, user-friendly web applications, personalized healthcare plans, and an AI-powered chatbot to provide comprehensive support for diabetes management.
 </div>
 
-https://github.com/karan-panda/Diabetes-Decoded-gdsc/assets/108183567/cb0ebc90-e253-4f60-a29a-70c59cb3bec6
-
-https://github.com/karan-panda/Diabetes-Decoded-gdsc/assets/108183567/3b01d0e5-21f2-4943-8d41-d55ccde0d5e7
-
-
 ## Table of Contents
 
 <details>
@@ -23,6 +18,10 @@ https://github.com/karan-panda/Diabetes-Decoded-gdsc/assets/108183567/3b01d0e5-2
   
   - **Diverse Machine Learning Models**: We implement various machine learning algorithms such as Linear Regression, Logistic Regression, and KNN. Through rigorous testing, we've identified Neural Networks to provide the highest accuracy and have integrated them into our core algorithm.
   
+  - **CNN-LSTM Hybrid Architecture**: We've employed a CNN-LSTM model that enhances accuracy by capturing both spatial and temporal features in health data, ensuring more precise risk detection.
+  
+  - **Google Fit Integration**: We connect with Google Fit to seamlessly fetch real-time user health data, improving prediction quality and personal insights.
+
   - **User-Friendly Web Application**: Our seamless web interface named "Diabetes Decoded" allows users to sign up, log in, and input their data for diabetes risk assessment.
   
   - **Comprehensive Diabetes Checking**: Users can input their demographic data along with advanced parameters to receive a personalized diabetes risk percentage based on our sophisticated machine learning algorithms.
@@ -35,7 +34,10 @@ https://github.com/karan-panda/Diabetes-Decoded-gdsc/assets/108183567/3b01d0e5-2
 <details>
   <summary>Work Flow🔄</summary>
   
-  ![Workflow](https://github.com/expenile/Counter-app/assets/129822353/3a99f4ff-b763-40ec-8103-430e96898f8b)
+  ![diagram-export-4-25-2025-7_18_25-PM](https://github.com/user-attachments/assets/29d8904d-586e-4f9d-a606-836ef58fdef1)
+  ![image](https://github.com/user-attachments/assets/dd30facc-f021-4ab3-981b-5ae366752237)
+  ![image](https://github.com/user-attachments/assets/96bd7396-e529-47a2-a44e-3817ece9b99f)
+
 </details>
 
 <details>
@@ -48,13 +50,18 @@ https://github.com/karan-panda/Diabetes-Decoded-gdsc/assets/108183567/3b01d0e5-2
 [![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Daisy UI](https://img.shields.io/badge/daisyUI-1ad1a5?style=for-the-badge&logo=daisyui&logoColor=white)](https://daisyui.com/)
+ <a href="https://shepherdjs.dev/" target="_blank">
+  <img src="https://avatars.githubusercontent.com/u/153328517?v=4" width="28" style="border-radius:50%; vertical-align:middle;" />
+  <img src="https://img.shields.io/badge/Shepherd.js-Tour_Guided_UI-6F42C1?style=for-the-badge&logo=none" />
+</a>
 
   ### Backend:
 
 [![Firebase](https://img.shields.io/badge/firebase-ffca28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/) 
+[![Google Cloud](https://img.shields.io/badge/Google%20Cloud-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white)](https://cloud.google.com/)
+
+
   
   ### Machine Learning & Chatbot:
 
@@ -67,6 +74,7 @@ https://github.com/karan-panda/Diabetes-Decoded-gdsc/assets/108183567/3b01d0e5-2
   
 [![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)](https://git-scm.com/) 
 [![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/) 
+[![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
   
   ### UX Design:
 [![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)](https://www.figma.com/) 
