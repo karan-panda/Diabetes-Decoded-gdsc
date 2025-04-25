@@ -148,7 +148,7 @@ export default function HealthResources() {
     } else {
       setFilteredResources(resources.filter(resource => resource.category === activeFilter));
     }
-  }, [activeFilter]);
+  }, [activeFilter, resources]);
 
   return (
     <div className="bg-gradient-to-b from-emerald-50 to-white min-h-screen">
